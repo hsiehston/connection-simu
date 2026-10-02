@@ -10,6 +10,7 @@
     :root{color-scheme:dark;--bg:#0b1720;--panel:#142530;--card:#1a303c;--text:#e9f2f3;--muted:#a8bdc6;--border:#344d5a;--accent:#71e4c5;--accent-bg:#204c48}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif}main{max-width:1160px;margin:auto;padding:36px 24px 24px}h1{margin:0;font-size:clamp(25px,4vw,36px);letter-spacing:-.04em}h2{margin:0;font-size:17px}.eyebrow{font-size:12px;letter-spacing:.16em;color:var(--accent);margin:0 0 5px}.intro{color:var(--muted);margin:8px 0 26px}.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(310px,.85fr);gap:20px;align-items:start}.panel{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px}.board-panel{position:sticky;top:18px}.board-head{display:flex;justify-content:space-between;align-items:center;gap:16px}.small{font-size:13px;color:var(--muted)}.badge{text-align:right}.badge strong{display:block;font-size:28px;color:var(--accent);line-height:1.3;font-variant-numeric:tabular-nums}svg{display:block;width:100%;max-width:560px;margin:12px auto;overflow:visible}.node{cursor:pointer;outline:none}.node:focus-visible circle:first-child{stroke:#ffdb8b;stroke-width:5}.legend{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);margin-right:6px}.hint{margin:14px 0 0;color:var(--muted);font-size:13px}.side{display:grid;gap:16px}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button,input,select{font:inherit;color:inherit}button{border:1px solid var(--border);border-radius:10px;min-height:46px;padding:9px 13px;background:var(--card);cursor:pointer;line-height:1.4}button:hover:not(:disabled){border-color:var(--accent);background:var(--accent-bg)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:3px}button.primary{background:var(--accent);color:#102d28;border-color:var(--accent);font-weight:700}button.primary:hover:not(:disabled){background:#9befd7}button:disabled{opacity:.5;cursor:wait}.wide{grid-column:1/-1}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:13px 16px}.stat span{display:block;font-size:12px;color:var(--muted)}.stat strong{font-size:22px;font-variant-numeric:tabular-nums}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}label{font-size:13px;color:var(--muted)}input,select{width:100%;min-height:46px;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:8px 10px;margin-top:5px;font-size:16px;color:var(--text)}.unit{display:flex;align-items:center;gap:7px}.result{margin-top:14px;background:var(--bg);border-radius:11px;padding:15px;font-size:14px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.result-grid span{display:block;font-size:12px;color:var(--muted)}.result-grid strong{font-size:17px;font-variant-numeric:tabular-nums}.result p{margin:12px 0 0;font-size:12px;color:var(--muted)}#status{min-height:26px;color:var(--accent);font-size:13px;margin:0 3px}progress{display:block;width:100%;accent-color:var(--accent);height:9px;margin:12px 0}footer{margin:25px 0 0;color:var(--muted);font-size:12px}details{margin-top:14px;color:var(--muted);font-size:12px}summary{cursor:pointer}details p{margin-bottom:0}.toast{min-height:20px}noscript{display:block;background:#522f28;padding:20px}
     @media(max-width:800px){main{padding:24px 16px}.layout{grid-template-columns:1fr}.board-panel{position:static}.panel{padding:17px}svg{max-width:460px}.intro{margin-bottom:18px}}@media(prefers-reduced-motion:no-preference){button{transition:background .15s,border-color .15s}}
+    .animation-control{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:17px;padding-top:15px;border-top:1px solid var(--border)}.animation-control strong{display:block;font-size:14px}.animation-control p{margin:2px 0 0;font-size:12px;color:var(--muted)}button.animation-switch{display:flex;align-items:center;gap:9px;border:0;background:transparent;padding:6px;flex-shrink:0;min-height:44px}.switch-track{width:44px;height:26px;border-radius:20px;background:var(--border);padding:3px;display:block}.switch-thumb{display:block;width:20px;height:20px;border-radius:50%;background:var(--text);transition:transform .18s}.animation-switch[aria-checked="true"] .switch-track{background:var(--accent)}.animation-switch[aria-checked="true"] .switch-thumb{background:#102d28;transform:translateX(18px)}.animation-switch span:last-child{font-size:13px;min-width:26px}.connection-caption{text-align:center;color:var(--accent);font-size:12px;min-height:20px;margin:0 0 10px;font-variant-numeric:tabular-nums}.node.tracing circle:first-child{stroke:#ffdb8b;stroke-width:3;filter:drop-shadow(0 0 6px #ffdb8b80)}#connectionHead{pointer-events:none;filter:drop-shadow(0 0 5px #71e4c5)}
   </style>
 </head>
 <body>
@@ -22,6 +23,7 @@
     <section class="panel board-panel" aria-labelledby="board-title">
       <div class="board-head"><div><h2 id="board-title">目前盤面</h2><div class="small">1 → 2 → … → 12 → 1</div></div><div class="badge"><span class="small">覆蓋面積</span><strong id="areaText">—</strong></div></div>
       <svg id="board" viewBox="0 0 440 440" role="group" aria-label="十二邊形連線盤面，點擊角上的編號以鎖定或解鎖"></svg>
+      <p id="connectionCaption" class="connection-caption">1 → 2 → … → 12 → 1</p>
       <div class="legend"><span><i class="dot"></i>已鎖定</span><span>點擊編號：鎖定／解除鎖定</span></div>
       <p class="hint">最多鎖 6 個角。填色採奇偶規則（even-odd），面積以完整十二邊形為 100%。</p>
     </section>
@@ -32,6 +34,10 @@
           <button id="rerollBtn" class="primary wide" type="button">隨機重洗未鎖角</button>
           <button id="clearLocksBtn" type="button">解除全部鎖定</button>
           <button id="resetCostBtn" type="button">重設素材統計</button>
+        </div>
+        <div class="animation-control">
+          <div><strong id="animationLabel">連線動畫</strong><p>重洗後依序繪出 1 → 12 → 1</p></div>
+          <button id="animationSwitch" class="animation-switch" type="button" role="switch" aria-checked="true" aria-labelledby="animationLabel"><span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span><span id="animationState" aria-hidden="true">開啟</span></button>
         </div>
         <details><summary>查看素材消耗規則</summary><p>鎖定 0／1／2／3／4／5／6 個角，每次分別消耗 10／10／30／60／100／150／220 素材。此表沿用原模擬器設定。</p></details>
       </section>
@@ -100,18 +106,22 @@ const Geometry = (() => {
   let labels=shuffle(Array.from({length:N},(_,i)=>i+1));
   const locked=new Set();
   let spent=0,attempts=0,busy=false,cancelled=false;
+  let animationEnabled=true,animationStart=0,animationFrame=null;
+  const segmentDuration=300; // Every numbered connection takes the same time.
   const svgPts=Geometry.points.map(p=>({x:220+166*p.x,y:220+166*p.y}));
   function shuffle(values){const a=values.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
   function cost(){return costs[locked.size];}
   function clearAnalysis(){$('simResult').textContent='盤面或設定已改變，按「計算成功率」重新分析。';}
-  function render(){
+  function render(replayAnimation=false){
     $('areaText').textContent=(Geometry.areaRatio(labels)*100).toFixed(2)+'%';
     $('lockCount').textContent=locked.size+' / 6';$('costNow').textContent=cost().toLocaleString();
     $('attemptCount').textContent=attempts.toLocaleString();$('spentText').textContent=spent.toLocaleString();
     const pos=Array(N);labels.forEach((v,p)=>pos[v-1]=p);
     const path=pos.map((p,i)=>(i?'L':'M')+svgPts[p].x+' '+svgPts[p].y).join(' ')+' Z';
     let html='<polygon points="'+svgPts.map(p=>p.x+','+p.y).join(' ')+'" fill="none" stroke="var(--border)" stroke-width="2"/>';
-    html+='<path d="'+path+'" fill="var(--accent)" fill-opacity=".2" fill-rule="evenodd" stroke="var(--accent)" stroke-opacity=".8" stroke-width="2" stroke-linejoin="round"/>';
+    html+='<path id="connectionFill" d="'+path+'" fill="var(--accent)" fill-opacity="'+(animationEnabled?0:.2)+'" fill-rule="evenodd"/>';
+    html+='<path id="connectionStroke" d="'+path+'" pathLength="1" fill="none" stroke="var(--accent)" stroke-opacity=".8" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="'+(animationEnabled?1:0)+'"/>';
+    html+='<g id="connectionHead" aria-hidden="true" opacity="0"><circle r="9" fill="var(--accent)" fill-opacity=".2"/><circle r="3.5" fill="#dcfff5"/></g>';
     svgPts.forEach((p,i)=>{
       const isLocked=locked.has(i);
       html+='<g class="node" data-pos="'+i+'" tabindex="'+(busy?'-1':'0')+'" role="button" aria-pressed="'+isLocked+'" aria-disabled="'+busy+'" aria-label="編號 '+labels[i]+(isLocked?'，已鎖定，點擊解鎖':'，點擊鎖定')+'">'+
@@ -120,7 +130,46 @@ const Geometry = (() => {
         (isLocked?'<circle cx="'+(p.x+18)+'" cy="'+(p.y-18)+'" r="5" fill="var(--accent)"/>':'')+'</g>';
     });
     $('board').innerHTML=html;
+    if(replayAnimation)animationStart=performance.now();
+    drawConnection(pos);
   }
+  // Animate only the presentation. Area and probability use the unchanged geometry.
+  function drawConnection(pos){
+    if(animationFrame!==null){cancelAnimationFrame(animationFrame);animationFrame=null;}
+    const stroke=$('connectionStroke'),fill=$('connectionFill'),head=$('connectionHead');
+    const nodes=[...$('board').querySelectorAll('.node')];
+    const route=pos.map(p=>svgPts[p]);route.push(route[0]);
+    const lengths=Array.from({length:N},(_,i)=>Math.hypot(route[i+1].x-route[i].x,route[i+1].y-route[i].y));
+    const total=lengths.reduce((a,b)=>a+b,0),cumulative=[0];
+    lengths.forEach(length=>cumulative.push(cumulative[cumulative.length-1]+length));
+    let active=-1;
+    function tick(now){
+      const progress=animationEnabled?Math.min(N,Math.max(0,(now-animationStart)/segmentDuration)):N;
+      const done=progress>=N,segment=Math.min(N-1,Math.floor(progress)),fraction=done?1:progress-segment;
+      const distance=cumulative[segment]+lengths[segment]*fraction;
+      stroke.setAttribute('stroke-dashoffset',String(1-distance/total));
+      fill.setAttribute('fill-opacity',String(.2*Math.max(0,(progress-(N-1)))));
+      head.setAttribute('opacity',done?'0':'1');
+      if(!done){
+        const a=route[segment],b=route[segment+1];
+        head.setAttribute('transform','translate('+(a.x+(b.x-a.x)*fraction)+' '+(a.y+(b.y-a.y)*fraction)+')');
+      }
+      if(active!==segment||done){
+        nodes.forEach((node,i)=>node.classList.toggle('tracing',!done&&(i===pos[segment]||i===pos[(segment+1)%N])));
+        $('connectionCaption').textContent=done?(animationEnabled?'連線完成 · 1 → 12 → 1':'靜態連線 · 1 → 12 → 1'):'正在連線 '+(segment+1)+' → '+((segment+1)%N+1)+' · '+(segment+1)+' / 12';
+        active=segment;
+      }
+      animationFrame=done?null:requestAnimationFrame(tick);
+    }
+    tick(performance.now());
+  }
+  $('animationSwitch').addEventListener('click',()=>{
+    animationEnabled=!animationEnabled;
+    $('animationSwitch').setAttribute('aria-checked',String(animationEnabled));
+    $('animationState').textContent=animationEnabled?'開啟':'關閉';
+    render(true);
+    $('status').textContent=animationEnabled?'已開啟連線動畫。':'已關閉連線動畫，直接顯示完整盤面。';
+  });
   function toggleLock(i){
     if(busy)return;
     if(locked.has(i)){locked.delete(i);$('status').textContent='已解除編號 '+labels[i]+' 的鎖定。';}
@@ -136,7 +185,7 @@ const Geometry = (() => {
     const positions=labels.map((_,i)=>i).filter(i=>!locked.has(i));
     const vals=shuffle(positions.map(i=>labels[i]));
     positions.forEach((p,i)=>{labels[p]=vals[i];});
-    spent+=cost();attempts++;clearAnalysis();render();
+    spent+=cost();attempts++;clearAnalysis();render(true);
     $('status').textContent='已重洗 '+positions.length+' 個未鎖角，消耗 '+cost()+' 素材。';
   });
   $('clearLocksBtn').addEventListener('click',()=>{if(busy)return;locked.clear();clearAnalysis();render();$('status').textContent='已解除全部鎖定。';});
@@ -193,7 +242,7 @@ const Geometry = (() => {
     }catch(error){console.error(error);$('simResult').textContent='分析未完成，請重新計算。';$('status').textContent='計算發生錯誤。';}
     finally{setBusy(false);}
   });
-  render();$('status').textContent='已建立隨機初始盤面。';
+  render(true);$('status').textContent='已建立隨機初始盤面。';
 })();
 </script>
 </body>
