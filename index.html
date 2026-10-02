@@ -107,7 +107,7 @@ const Geometry = (() => {
   const locked=new Set();
   let spent=0,attempts=0,busy=false,cancelled=false;
   let animationEnabled=true,animationStart=0,animationFrame=null;
-  const segmentDuration=300; // Every numbered connection takes the same time.
+  const segmentDuration=150; // Every numbered connection takes the same time.
   const svgPts=Geometry.points.map(p=>({x:220+166*p.x,y:220+166*p.y}));
   function shuffle(values){const a=values.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
   function cost(){return costs[locked.size];}
