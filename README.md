@@ -1,7 +1,5 @@
 # 12 邊形連線模擬器
 
-單一 HTML 靜態網頁，無需後端、套件或建置步驟。
-
 ## 功能
 
 - 數字 1 → 12 → 1 依序連線，採 even-odd 填色並計算覆蓋面積。
@@ -13,11 +11,7 @@
 
 ## 使用
 
-直接開啟 `index.html`，或透過 GitHub Pages 使用。
-
-## GitHub Pages
-
-在儲存庫的 Settings → Pages，選擇 Deploy from a branch，設定 `main` 和 `/(root)`，按 Save。
+直接開啟 `index.html`，或透過 https://hsiehston.github.io/connection-simu/ 使用。
 
 ## 模型
 
