@@ -14,6 +14,10 @@
 @media(max-width:370px){.stats-line{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 44px;gap:3px}.stats-line>span{display:flex;flex-direction:column;gap:1px}.stats-line b{font-size:12px}.board-head .eyebrow{display:none}.order-grid{grid-template-columns:repeat(4,minmax(0,1fr))}main{padding:12px 10px}.masthead-note{font-size:9px}.board-panel{padding:14px 12px 10px}.toolbar{flex-wrap:wrap}.animation-switch{padding-left:3px!important}.board-annotation{gap:5px}.legend{font-size:9px}.triple-bottom{flex-direction:column;align-items:flex-start}.area strong{font-size:29px}.result-row{font-size:10px}.import-heading{gap:5px}.import-heading .subtle{font-size:9px}}
 @media(max-width:900px){button,.animation-switch,.stats-line button,.triple-actions button,.recommend-footer .primary,summary{min-height:44px;min-width:44px}.import-head{min-height:44px}.goal input{min-height:44px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.order-grid label.is-active .slot-number{color:var(--accent-text);font-weight:700}.order-grid label.is-active input{background:#f2fadf;border:2px solid #84a456;padding:4px 1px}.order-grid input[readonly]{cursor:pointer}.order-actions button:disabled{cursor:default}.number-entry{margin-top:12px;padding-top:11px;border-top:1px solid var(--border)}.picker-head{display:flex;align-items:center;gap:12px;margin-bottom:8px;color:var(--muted);font-size:11px}.picker-head strong{font-weight:600;color:var(--accent-text)}.picker-head>span{margin-left:auto}.number-pad{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px}.number-choice{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;padding:5px 2px;background:#f5f7ef;border-color:#d4ddca}.number-value{font:500 17px var(--mono)}.number-owner{font-size:9px;line-height:1.35;font-weight:400;color:var(--muted)}.number-choice.is-used{background:#f0f2eb}.number-choice:disabled{opacity:1;color:#939b8c;background:#f0f2eb;border-color:#e1e5db;cursor:default}.number-choice:disabled .number-owner{color:#899281}.number-choice.is-current{background:#edf8d8;border-color:#91ad62;color:#355a23}.number-choice:focus-visible{outline-offset:2px}.keyboard-mode{display:none;min-height:32px;padding:4px 8px;font-size:10px}.keyboard-mode[aria-pressed=true]{background:#edf8d8;border-color:#91ad62}.order-actions .primary.complete{box-shadow:0 0 0 2px #d0f57c33}.import .input-caption{line-height:1.55}
+@media(max-width:720px){.number-pad{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.number-choice{min-height:52px}.picker-head{flex-wrap:wrap;gap:3px 8px;margin-bottom:9px}.picker-head>span{margin-left:0;font-size:10px}.picker-head strong{font-size:11px}.number-entry{margin-top:10px;padding-top:10px}.keyboard-mode{margin-left:auto}.order-actions{width:100%;justify-content:flex-end}.order-actions button{padding:8px 10px}}
+@media(pointer:coarse){.keyboard-mode{display:inline-flex;align-items:center;justify-content:center;min-height:44px}.picker-head>span{flex:1}}
 </style>
 </head>
 <body><a class="skip-link" href="#orderPosition1">跳至順序輸入</a><noscript>請啟用 JavaScript 以使用鎖法分析。</noscript>
@@ -23,8 +27,9 @@
 <details class="panel import" id="orderEntry" aria-labelledby="import-title" open>
 <summary class="import-head"><h2 class="import-summary-title" id="import-title"><span class="import-heading"><span><span class="section-index">01</span>盤面順序</span><span class="subtle">最上方起，順時針</span></span><span id="inputProgress" class="input-progress">00 / 12</span></h2><span class="fold-icon" aria-hidden="true"></span></summary>
 <div class="import-body">
-<div class="input-row"><div id="orderGrid" class="order-grid"><label><span class="slot-number">01</span><input id="orderPosition1" class="order-position" aria-label="位置 1 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">02</span><input id="orderPosition2" class="order-position" aria-label="位置 2 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">03</span><input id="orderPosition3" class="order-position" aria-label="位置 3 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">04</span><input id="orderPosition4" class="order-position" aria-label="位置 4 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">05</span><input id="orderPosition5" class="order-position" aria-label="位置 5 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">06</span><input id="orderPosition6" class="order-position" aria-label="位置 6 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">07</span><input id="orderPosition7" class="order-position" aria-label="位置 7 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">08</span><input id="orderPosition8" class="order-position" aria-label="位置 8 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">09</span><input id="orderPosition9" class="order-position" aria-label="位置 9 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">10</span><input id="orderPosition10" class="order-position" aria-label="位置 10 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">11</span><input id="orderPosition11" class="order-position" aria-label="位置 11 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">12</span><input id="orderPosition12" class="order-position" aria-label="位置 12 的編號" inputmode="numeric" enterkeyhint="done" maxlength="2" autocomplete="off" spellcheck="false"></label></div><div class="order-actions"><button id="clearOrder" type="button">清空</button><button id="applyOrder" class="primary" type="button">套用順序</button></div></div>
-<p id="inputMessage" class="input-caption" role="status">Enter 下一格・最後一格套用・也可貼上完整順序。</p>
+<div class="input-row"><div id="orderGrid" class="order-grid"><label><span class="slot-number">01</span><input id="orderPosition1" class="order-position" aria-label="位置 1 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">02</span><input id="orderPosition2" class="order-position" aria-label="位置 2 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">03</span><input id="orderPosition3" class="order-position" aria-label="位置 3 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">04</span><input id="orderPosition4" class="order-position" aria-label="位置 4 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">05</span><input id="orderPosition5" class="order-position" aria-label="位置 5 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">06</span><input id="orderPosition6" class="order-position" aria-label="位置 6 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">07</span><input id="orderPosition7" class="order-position" aria-label="位置 7 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">08</span><input id="orderPosition8" class="order-position" aria-label="位置 8 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">09</span><input id="orderPosition9" class="order-position" aria-label="位置 9 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">10</span><input id="orderPosition10" class="order-position" aria-label="位置 10 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">11</span><input id="orderPosition11" class="order-position" aria-label="位置 11 的編號" inputmode="numeric" enterkeyhint="next" maxlength="2" autocomplete="off" spellcheck="false"></label><label><span class="slot-number">12</span><input id="orderPosition12" class="order-position" aria-label="位置 12 的編號" inputmode="numeric" enterkeyhint="done" maxlength="2" autocomplete="off" spellcheck="false"></label></div><div class="order-actions"><button id="undoOrder" type="button" disabled>退回一步</button><button id="clearOrder" type="button">清空</button><button id="applyOrder" class="primary" type="button">套用順序</button></div></div>
+<div class="number-entry"><div class="picker-head"><strong id="pickerStatus">正在填入位置 01</strong><span id="pickerHint">點數字後，自動跳下一個空格</span><button id="keyboardModeBtn" class="keyboard-mode" type="button" aria-pressed="false">鍵盤輸入</button></div><div id="numberPad" class="number-pad" role="group" aria-label="點選 1 至 12 編號"></div></div>
+<p id="inputMessage" class="input-caption" role="status">點選下方數字依序填入；點已填位置可修正。</p>
 </div></details>
 <div class="layout">
 <section class="panel success-panel" aria-labelledby="success-title"><div class="success-head"><h2 id="success-title">達標成功率 <span id="currentLockedTitle" class="lock-badge">0 鎖</span></h2><label class="goal">目標 <input id="targetInput" type="number" min="90" max="100" step="0.1" value="90" aria-label="目標面積百分比">%</label></div><strong id="currentProbability" class="probability">—</strong><div class="result-row"><span id="currentFraction">精確成功率</span><span id="expectedCost">—</span></div><p id="currentLockLabels" class="inline-note">點擊編號或採用下方推薦鎖法。</p></section>
@@ -114,10 +119,27 @@ const LockAnalysis=(()=>{
  }
  return {parseOrder,analyze,countsFor,popcount,factorial,sixMasks,sixLockMeanArea};
 })();
+const OrderInput=(()=>{
+ function ready(values){return values.length===12&&values.every(v=>Number.isInteger(v)&&v>=1&&v<=12)&&new Set(values).size===12;}
+ function choose(values,index,value){
+  if(!Number.isInteger(index)||index<0||index>=12||!Number.isInteger(value)||value<1||value>12)return null;
+  const next=values.slice(),owner=values.findIndex((v,i)=>i!==index&&v===value);
+  if(owner>=0&&next[index]===null)return null;
+  if(owner>=0)next[owner]=next[index];
+  next[index]=value;
+  let active=index;
+  for(let offset=1;offset<=12;offset++){const candidate=(index+offset)%12;if(next[candidate]===null){active=candidate;break;}}
+  return {values:next,active,swapped:owner>=0?owner:null,complete:ready(next)};
+ }
+ return {ready,choose};
+})();
 (()=>{
  const $=id=>document.getElementById(id),costs=[10,10,30,60,100,150,220];
  let labels=shuffle(Array.from({length:12},(_,i)=>i+1)),target=90,result=null,cacheKey='',spent=0,attempts=0;
  const orderFields=[...document.querySelectorAll('.order-position')];
+ let activePosition=0,keyboardEnabled=false;const inputHistory=[],touchEntry=window.matchMedia('(pointer: coarse)').matches;
+ const numberButtons=Array.from({length:12},(_,i)=>{const button=document.createElement('button');button.type='button';button.className='number-choice';button.dataset.number=i+1;button.innerHTML='<span class="number-value">'+(i+1)+'</span><span class="number-owner"></span>';$('numberPad').appendChild(button);return button;});
+ orderFields.forEach(field=>field.readOnly=touchEntry&&!keyboardEnabled);
  const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
  const locked=new Set();let animationEnabled=!reducedMotion.matches,animationStart=0,animationFrame=null;
  const segmentDuration=150; // Milliseconds per numbered connection; keeps the current site setting.
@@ -126,8 +148,40 @@ const LockAnalysis=(()=>{
  const maskLabels=mask=>labels.filter((_,i)=>mask&(1<<i));
  const formatProbability=(count,denominator)=>(count/denominator*100).toFixed(count/denominator<.001?4:3)+'%';
  function shuffle(values){const a=values.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
- function setMessage(message,error=false){if($('inputMessage').textContent!==message)$('inputMessage').textContent=message;$('inputMessage').classList.toggle('error',error);updateInputProgress();}
+ function setMessage(message,error=false){if($('inputMessage').textContent!==message)$('inputMessage').textContent=message;$('inputMessage').classList.toggle('error',error);updateInputProgress();updateNumberPicker();}
  function updateInputProgress(){const values=orderFields.map(readPosition),count=values.filter(value=>value!==null).length;$('inputProgress').textContent=String(count).padStart(2,'0')+' / 12';$('inputProgress').classList.toggle('ready',count===12&&new Set(values).size===12);}
+ function inputSnapshot(){return {values:orderFields.map(field=>field.value),active:activePosition};}
+ function rememberInput(snapshot=inputSnapshot()){inputHistory.push(snapshot);if(inputHistory.length>100)inputHistory.shift();}
+ function showInputPosition(){
+  $('board').querySelectorAll('.node').forEach(node=>node.classList.toggle('input-active',$('orderEntry').open&&Number(node.dataset.pos)===activePosition));
+  if($('orderEntry').open)$('boardHint').textContent='輸入位置 '+String(activePosition+1).padStart(2,'0')+' · 最上方起，順時針。';
+ }
+ function selectPosition(index){activePosition=index;updateNumberPicker();showInputPosition();}
+ function updateNumberPicker(){
+  const values=orderFields.map(readPosition),current=values[activePosition],complete=OrderInput.ready(values);
+  orderFields.forEach((field,i)=>field.parentElement.classList.toggle('is-active',i===activePosition));
+  $('pickerStatus').textContent=(current===null?'正在填入位置 ':'正在修正位置 ')+String(activePosition+1).padStart(2,'0');
+  $('pickerHint').textContent=complete?'已填滿；確認後套用順序':current!==null?'選已用編號會交換兩格':'點數字後，自動跳下一個空格';
+  $('applyOrder').disabled=!complete;$('applyOrder').classList.toggle('complete',complete);$('undoOrder').disabled=inputHistory.length===0;
+  numberButtons.forEach((button,i)=>{const value=i+1,owner=values.indexOf(value),isCurrent=current===value;
+   button.disabled=owner>=0&&owner!==activePosition&&current===null;
+   button.classList.toggle('is-used',owner>=0);button.classList.toggle('is-current',isCurrent);button.setAttribute('aria-pressed',String(isCurrent));
+   button.querySelector('.number-owner').textContent=isCurrent?'目前位置':owner>=0?'位置 '+String(owner+1).padStart(2,'0'):'未使用';
+   button.setAttribute('aria-label','編號 '+value+(isCurrent?'，目前位置':owner>=0?'，在位置 '+(owner+1)+(current!==null?'；交換兩格':'，已使用'):'，填入位置 '+(activePosition+1)));
+  });
+ }
+ function chooseNumber(value){
+  const previous=inputSnapshot(),selection=OrderInput.choose(orderFields.map(readPosition),activePosition,value);if(!selection)return;
+  if(selection.values.some((v,i)=>String(v??'')!==previous.values[i]))rememberInput(previous);
+  orderFields.forEach((field,i)=>{field.value=selection.values[i]??'';field.removeAttribute('aria-invalid');});activePosition=selection.active;
+  setMessage(selection.complete?'已填滿 12 格；按「套用順序」確認。':selection.swapped!==null?'已交換兩個位置；其餘輸入保留。':'已填入 '+value+'；繼續選擇下一個編號。');showInputPosition();
+  if(selection.complete)$('applyOrder').focus({preventScroll:true});
+  else if(document.activeElement?.disabled&&document.activeElement.closest('#numberPad'))numberButtons.find(button=>!button.disabled)?.focus({preventScroll:true});
+ }
+ $('numberPad').addEventListener('click',event=>{const button=event.target.closest('[data-number]');if(button&&!button.disabled)chooseNumber(Number(button.dataset.number));});
+ $('undoOrder').addEventListener('click',()=>{const previous=inputHistory.pop();if(!previous)return;orderFields.forEach((field,i)=>{field.value=previous.values[i];field.removeAttribute('aria-invalid');});activePosition=previous.active;setMessage('已退回上一步；尚未套用的輸入已復原。');showInputPosition();if($('undoOrder').disabled)numberButtons.find(button=>!button.disabled)?.focus({preventScroll:true});});
+ $('keyboardModeBtn').addEventListener('click',()=>{keyboardEnabled=!keyboardEnabled;orderFields.forEach(field=>field.readOnly=touchEntry&&!keyboardEnabled);$('keyboardModeBtn').setAttribute('aria-pressed',String(keyboardEnabled));if(keyboardEnabled)focusPosition(orderFields[activePosition]);setMessage(keyboardEnabled?'鍵盤輸入已開啟；Enter 跳下一格。':'可使用下方數字按鈕填入。');});
+ $('orderEntry').addEventListener('toggle',()=>{if(!$('orderEntry').open){$('board').querySelectorAll('.input-active').forEach(node=>node.classList.remove('input-active'));previewMask();}});
  function previewMask(mask=0){$('board').querySelectorAll('.node').forEach(node=>node.classList.toggle('preview',!!(mask&(1<<Number(node.dataset.pos)))));$('boardHint').textContent=mask?'預覽 '+LockAnalysis.popcount(mask)+' 個角，按鈕套用後固定其位置。':'點擊編號鎖定，最多保留六個角。';}
  function updateAnalysis(){
   const key=labels.join(',')+'|'+target;if(key!==cacheKey){result=LockAnalysis.analyze(labels,target);cacheKey=key;}
@@ -176,7 +230,7 @@ const LockAnalysis=(()=>{
  $('board').addEventListener('click',e=>{const n=e.target.closest('[data-pos]');if(n)toggleLock(Number(n.dataset.pos));});
  $('board').addEventListener('keydown',e=>{const n=e.target.closest('[data-pos]');if(n&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleLock(Number(n.dataset.pos));}});
  document.addEventListener('click',e=>{const b=e.target.closest('button[data-mask]');if(!b)return;const mask=Number(b.dataset.mask);locked.clear();for(let i=0;i<12;i++)if(mask&(1<<i))locked.add(i);render();document.querySelector('button[data-mask="'+mask+'"]')?.focus({preventScroll:true});$('status').textContent='已採用 '+locked.size+' 鎖，成功率即時更新。';});
- function syncOrderFields(){orderFields.forEach((field,i)=>{field.value=labels[i];field.removeAttribute('aria-invalid');});updateInputProgress();}
+ function syncOrderFields(){orderFields.forEach((field,i)=>{field.value=labels[i];field.removeAttribute('aria-invalid');});inputHistory.length=0;updateInputProgress();updateNumberPicker();}
  function readPosition(field){const value=field.value.trim().replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xfee0));return /^\d+$/.test(value)&&Number(value)>=1&&Number(value)<=12?Number(value):null;}
  function focusPosition(field){field.focus();field.select();}
  function applyOrder(){
@@ -189,14 +243,15 @@ const LockAnalysis=(()=>{
  $('applyOrder').addEventListener('click',applyOrder);
  document.querySelector('.skip-link').addEventListener('click',()=>{$('orderEntry').open=true;focusPosition(orderFields[0]);});
  orderFields.forEach((field,i)=>{
-  field.setAttribute('aria-describedby','inputMessage');
-  field.addEventListener('focus',()=>{$('board').querySelectorAll('.node').forEach(node=>node.classList.toggle('input-active',Number(node.dataset.pos)===i));$('boardHint').textContent='輸入位置 '+String(i+1).padStart(2,'0')+' · 最上方起，順時針。';});
+  let editStart=null,editRecorded=false;
+  field.setAttribute('aria-describedby','inputMessage pickerStatus');
+  field.addEventListener('focus',()=>{selectPosition(i);editStart=inputSnapshot();editRecorded=false;});
   field.addEventListener('blur',()=>{$('board').querySelectorAll('.input-active').forEach(node=>node.classList.remove('input-active'));previewMask();});
-  field.addEventListener('paste',e=>{const text=e.clipboardData?.getData('text')||'';if(!/[\s,，、;；]/.test(text.trim()))return;e.preventDefault();try{const order=LockAnalysis.parseOrder(text);orderFields.forEach((slot,j)=>{slot.value=order[j];slot.removeAttribute('aria-invalid');});setMessage('已填入完整順序；按最後一格 Enter 或「套用順序」確認。');focusPosition(orderFields[11]);}catch(error){setMessage(error.message,true);}});
-  field.addEventListener('input',()=>{field.removeAttribute('aria-invalid');setMessage('尚未套用；按 Enter 跳下一格，第 12 格按 Enter 套用。');});
+  field.addEventListener('paste',e=>{const text=e.clipboardData?.getData('text')||'';if(!/[\s,，、;；]/.test(text.trim()))return;e.preventDefault();try{const order=LockAnalysis.parseOrder(text);rememberInput();orderFields.forEach((slot,j)=>{slot.value=order[j];slot.removeAttribute('aria-invalid');});setMessage('已填入完整順序；按最後一格 Enter 或「套用順序」確認。');focusPosition(orderFields[11]);}catch(error){setMessage(error.message,true);}});
+  field.addEventListener('input',()=>{if(!editRecorded&&editStart){rememberInput(editStart);editRecorded=true;}field.removeAttribute('aria-invalid');setMessage('尚未套用；按 Enter 跳下一格，第 12 格按 Enter 套用。');});
   field.addEventListener('keydown',e=>{if(e.key!=='Enter'||e.isComposing)return;e.preventDefault();if(i===11){applyOrder();return;}if(readPosition(field)===null){field.setAttribute('aria-invalid','true');setMessage('位置 '+(i+1)+' 請輸入 1 至 12 的整數。',true);return;}focusPosition(orderFields[i+1]);});
  });
- $('clearOrder').addEventListener('click',()=>{orderFields.forEach(field=>{field.value='';field.removeAttribute('aria-invalid');});setMessage('已清空輸入；填完 12 格後套用順序。');focusPosition(orderFields[0]);});
+ $('clearOrder').addEventListener('click',()=>{if(orderFields.some(field=>field.value))rememberInput();activePosition=0;orderFields.forEach(field=>{field.value='';field.removeAttribute('aria-invalid');});setMessage('已清空輸入；點選數字依序填入。');selectPosition(0);if(!touchEntry||keyboardEnabled)focusPosition(orderFields[0]);});
  $('targetInput').addEventListener('change',()=>{const value=Number($('targetInput').value);if($('targetInput').value.trim()===''||!Number.isFinite(value)||value<90||value>100){$('targetInput').value=target;$('status').textContent='精確分析支援 90% 至 100% 的目標。';return;}target=value;render();$('status').textContent='目標已更新為 '+target+'%。';});
  $('rerollBtn').addEventListener('click',()=>{const positions=labels.map((_,i)=>i).filter(i=>!locked.has(i)),vals=shuffle(positions.map(i=>labels[i]));positions.forEach((p,i)=>labels[p]=vals[i]);spent+=costs[locked.size];attempts++;syncOrderFields();render(true);setMessage('目前盤面已更新。');$('status').textContent='已重洗未鎖角，推薦鎖法已更新。';});
  $('clearLocksBtn').addEventListener('click',()=>{locked.clear();render();$('status').textContent='已解除全部鎖定。';});$('resetCostBtn').addEventListener('click',()=>{spent=0;attempts=0;render();$('status').textContent='素材統計已歸零。';});
@@ -206,7 +261,7 @@ const LockAnalysis=(()=>{
  document.addEventListener('focusin',e=>{const button=e.target.closest('button[data-mask]');if(button)previewMask(Number(button.dataset.mask));});
  document.addEventListener('focusout',e=>{if(e.target.closest('button[data-mask]'))previewMask(Number(e.relatedTarget?.dataset.mask)||0);});
  reducedMotion.addEventListener('change',e=>{if(e.matches){animationEnabled=false;$('animationSwitch').setAttribute('aria-checked','false');render(true);}});
- $('animationSwitch').setAttribute('aria-checked',String(animationEnabled));updateInputProgress();render(true);
+ $('animationSwitch').setAttribute('aria-checked',String(animationEnabled));updateInputProgress();updateNumberPicker();render(true);
 })();
 </script>
 </body></html>
