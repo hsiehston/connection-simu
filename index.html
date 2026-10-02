@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1720">
+  <meta name="description" content="十二邊形連線模擬器：鎖定、隨機重洗、覆蓋面積與成功率分析。">
+  <title>12 邊形連線模擬器</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1720;--panel:#142530;--card:#1a303c;--text:#e9f2f3;--muted:#a8bdc6;--border:#344d5a;--accent:#71e4c5;--accent-bg:#204c48}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif}main{max-width:1160px;margin:auto;padding:36px 24px 24px}h1{margin:0;font-size:clamp(25px,4vw,36px);letter-spacing:-.04em}h2{margin:0;font-size:17px}.eyebrow{font-size:12px;letter-spacing:.16em;color:var(--accent);margin:0 0 5px}.intro{color:var(--muted);margin:8px 0 26px}.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(310px,.85fr);gap:20px;align-items:start}.panel{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px}.board-panel{position:sticky;top:18px}.board-head{display:flex;justify-content:space-between;align-items:center;gap:16px}.small{font-size:13px;color:var(--muted)}.badge{text-align:right}.badge strong{display:block;font-size:28px;color:var(--accent);line-height:1.3;font-variant-numeric:tabular-nums}svg{display:block;width:100%;max-width:560px;margin:12px auto;overflow:visible}.node{cursor:pointer;outline:none}.node:focus-visible circle:first-child{stroke:#ffdb8b;stroke-width:5}.legend{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);margin-right:6px}.hint{margin:14px 0 0;color:var(--muted);font-size:13px}.side{display:grid;gap:16px}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button,input,select{font:inherit;color:inherit}button{border:1px solid var(--border);border-radius:10px;min-height:46px;padding:9px 13px;background:var(--card);cursor:pointer;line-height:1.4}button:hover:not(:disabled){border-color:var(--accent);background:var(--accent-bg)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:3px}button.primary{background:var(--accent);color:#102d28;border-color:var(--accent);font-weight:700}button.primary:hover:not(:disabled){background:#9befd7}button:disabled{opacity:.5;cursor:wait}.wide{grid-column:1/-1}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:13px 16px}.stat span{display:block;font-size:12px;color:var(--muted)}.stat strong{font-size:22px;font-variant-numeric:tabular-nums}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}label{font-size:13px;color:var(--muted)}input,select{width:100%;min-height:46px;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:8px 10px;margin-top:5px;font-size:16px;color:var(--text)}.unit{display:flex;align-items:center;gap:7px}.result{margin-top:14px;background:var(--bg);border-radius:11px;padding:15px;font-size:14px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.result-grid span{display:block;font-size:12px;color:var(--muted)}.result-grid strong{font-size:17px;font-variant-numeric:tabular-nums}.result p{margin:12px 0 0;font-size:12px;color:var(--muted)}#status{min-height:26px;color:var(--accent);font-size:13px;margin:0 3px}progress{display:block;width:100%;accent-color:var(--accent);height:9px;margin:12px 0}footer{margin:25px 0 0;color:var(--muted);font-size:12px}details{margin-top:14px;color:var(--muted);font-size:12px}summary{cursor:pointer}details p{margin-bottom:0}.toast{min-height:20px}noscript{display:block;background:#522f28;padding:20px}
+    @media(max-width:800px){main{padding:24px 16px}.layout{grid-template-columns:1fr}.board-panel{position:static}.panel{padding:17px}svg{max-width:460px}.intro{margin-bottom:18px}}@media(prefers-reduced-motion:no-preference){button{transition:background .15s,border-color .15s}}
+  </style>
+</head>
+<body>
+<noscript>此模擬器需要啟用 JavaScript。</noscript>
+<main>
+  <p class="eyebrow">TWELVE · CONNECTION LAB</p>
+  <h1>12 邊形連線模擬器</h1>
+  <p class="intro">鎖住想保留的角，重洗其餘編號，看看距離目標面積還有多遠。</p>
+  <div class="layout">
+    <section class="panel board-panel" aria-labelledby="board-title">
+      <div class="board-head"><div><h2 id="board-title">目前盤面</h2><div class="small">1 → 2 → … → 12 → 1</div></div><div class="badge"><span class="small">覆蓋面積</span><strong id="areaText">—</strong></div></div>
+      <svg id="board" viewBox="0 0 440 440" role="group" aria-label="十二邊形連線盤面，點擊角上的編號以鎖定或解鎖"></svg>
+      <div class="legend"><span><i class="dot"></i>已鎖定</span><span>點擊編號：鎖定／解除鎖定</span></div>
+      <p class="hint">最多鎖 6 個角。填色採奇偶規則（even-odd），面積以完整十二邊形為 100%。</p>
+    </section>
+    <div class="side">
+      <section class="panel" aria-labelledby="control-title">
+        <h2 id="control-title">重洗與鎖定</h2>
+        <div class="buttons">
+          <button id="rerollBtn" class="primary wide" type="button">隨機重洗未鎖角</button>
+          <button id="clearLocksBtn" type="button">解除全部鎖定</button>
+          <button id="resetCostBtn" type="button">重設素材統計</button>
+        </div>
+        <details><summary>查看素材消耗規則</summary><p>鎖定 0／1／2／3／4／5／6 個角，每次分別消耗 10／10／30／60／100／150／220 素材。此表沿用原模擬器設定。</p></details>
+      </section>
+      <div class="stats" aria-label="素材統計">
+        <div class="stat"><span>鎖定數</span><strong id="lockCount">0 / 6</strong></div>
+        <div class="stat"><span>每次素材</span><strong id="costNow">10</strong></div>
+        <div class="stat"><span>已重洗</span><strong id="attemptCount">0</strong></div>
+        <div class="stat"><span>已消耗素材</span><strong id="spentText">0</strong></div>
+      </div>
+      <section class="panel" aria-labelledby="analysis-title">
+        <h2 id="analysis-title">目前鎖法的成功率</h2>
+        <div class="form">
+          <label>目標面積<div class="unit"><input id="targetInput" type="number" min="1" max="100" step="0.1" value="90" aria-label="目標面積百分比"><span>%</span></div></label>
+          <label>未滿六鎖時的抽樣<select id="sampleCount"><option value="1000">1,000 次</option><option value="3000" selected>3,000 次</option><option value="10000">10,000 次</option></select></label>
+        </div>
+        <button id="simulateBtn" class="primary" type="button" style="width:100%">計算成功率</button>
+        <button id="cancelBtn" type="button" style="width:100%;margin-top:8px" hidden>取消計算</button>
+        <div id="simResult" class="result" aria-live="polite">六鎖時完整枚舉剩餘 6! = 720 種排列；未滿六鎖使用隨機抽樣。</div>
+      </section>
+      <p id="status" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+  <footer>重洗假設：未鎖定的編號均勻隨機排列。面積與成功率依此模型計算。</footer>
+</main>
+<script>
+'use strict';
+// Standalone static page: no build step, external assets, network requests, or backend.
+const Geometry = (() => {
+  const N=12, EPS=1e-10;
+  const points=Array.from({length:N},(_,i)=>{const a=-Math.PI/2+i*Math.PI/6;return {x:Math.cos(a),y:Math.sin(a)};});
+  const baseArea=N*Math.sin(2*Math.PI/N)/2;
+  function areaRatio(labels){
+    const positions=Array(N);
+    labels.forEach((label,pos)=>{positions[label-1]=pos;});
+    const poly=positions.map(pos=>points[pos]);
+    const edges=poly.map((a,i)=>({a,b:poly[(i+1)%N]}));
+    const cuts=poly.map(p=>p.y);
+    // Between vertex/intersection heights, edge order is fixed and width is linear.
+    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
+      const {a,b}=edges[i],{a:c,b:d}=edges[j];
+      const rx=b.x-a.x,ry=b.y-a.y,sx=d.x-c.x,sy=d.y-c.y;
+      const den=rx*sy-ry*sx;
+      if(Math.abs(den)<EPS)continue;
+      const qx=c.x-a.x,qy=c.y-a.y;
+      const t=(qx*sy-qy*sx)/den,u=(qx*ry-qy*rx)/den;
+      if(t>EPS&&t<1-EPS&&u>EPS&&u<1-EPS)cuts.push(a.y+t*ry);
+    }
+    const ys=cuts.sort((a,b)=>a-b).filter((y,i,arr)=>i===0||y-arr[i-1]>EPS);
+    let area=0;
+    for(let i=0;i<ys.length-1;i++){
+      const y=(ys[i]+ys[i+1])/2;
+      const xs=[];
+      for(const {a,b} of edges)if((a.y>y)!==(b.y>y))xs.push(a.x+(y-a.y)*(b.x-a.x)/(b.y-a.y));
+      xs.sort((a,b)=>a-b);
+      let width=0;
+      for(let k=0;k+1<xs.length;k+=2)width+=xs[k+1]-xs[k];
+      area+=width*(ys[i+1]-ys[i]);
+    }
+    return Math.max(0,Math.min(1,area/baseArea));
+  }
+  return {points,areaRatio};
+})();
+(() => {
+  const $=id=>document.getElementById(id),N=12;
+  const costs=[10,10,30,60,100,150,220];
+  let labels=shuffle(Array.from({length:N},(_,i)=>i+1));
+  const locked=new Set();
+  let spent=0,attempts=0,busy=false,cancelled=false;
+  const svgPts=Geometry.points.map(p=>({x:220+166*p.x,y:220+166*p.y}));
+  function shuffle(values){const a=values.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  function cost(){return costs[locked.size];}
+  function clearAnalysis(){$('simResult').textContent='盤面或設定已改變，按「計算成功率」重新分析。';}
+  function render(){
+    $('areaText').textContent=(Geometry.areaRatio(labels)*100).toFixed(2)+'%';
+    $('lockCount').textContent=locked.size+' / 6';$('costNow').textContent=cost().toLocaleString();
+    $('attemptCount').textContent=attempts.toLocaleString();$('spentText').textContent=spent.toLocaleString();
+    const pos=Array(N);labels.forEach((v,p)=>pos[v-1]=p);
+    const path=pos.map((p,i)=>(i?'L':'M')+svgPts[p].x+' '+svgPts[p].y).join(' ')+' Z';
+    let html='<polygon points="'+svgPts.map(p=>p.x+','+p.y).join(' ')+'" fill="none" stroke="var(--border)" stroke-width="2"/>';
+    html+='<path d="'+path+'" fill="var(--accent)" fill-opacity=".2" fill-rule="evenodd" stroke="var(--accent)" stroke-opacity=".8" stroke-width="2" stroke-linejoin="round"/>';
+    svgPts.forEach((p,i)=>{
+      const isLocked=locked.has(i);
+      html+='<g class="node" data-pos="'+i+'" tabindex="'+(busy?'-1':'0')+'" role="button" aria-pressed="'+isLocked+'" aria-disabled="'+busy+'" aria-label="編號 '+labels[i]+(isLocked?'，已鎖定，點擊解鎖':'，點擊鎖定')+'">'+
+        '<circle cx="'+p.x+'" cy="'+p.y+'" r="23" fill="'+(isLocked?'var(--accent-bg)':'var(--panel)')+'" stroke="'+(isLocked?'var(--accent)':'var(--border)')+'" stroke-width="'+(isLocked?3:2)+'"/>'+
+        '<text x="'+p.x+'" y="'+(p.y+6)+'" text-anchor="middle" font-size="18" font-weight="700" fill="var(--text)">'+labels[i]+'</text>'+
+        (isLocked?'<circle cx="'+(p.x+18)+'" cy="'+(p.y-18)+'" r="5" fill="var(--accent)"/>':'')+'</g>';
+    });
+    $('board').innerHTML=html;
+  }
+  function toggleLock(i){
+    if(busy)return;
+    if(locked.has(i)){locked.delete(i);$('status').textContent='已解除編號 '+labels[i]+' 的鎖定。';}
+    else if(locked.size>=6){$('status').textContent='最多只能鎖定 6 個角。';return;}
+    else{locked.add(i);$('status').textContent='已鎖定編號 '+labels[i]+'。';}
+    clearAnalysis();render();
+    $('board').querySelector('[data-pos="'+i+'"]').focus();
+  }
+  $('board').addEventListener('click',e=>{const node=e.target.closest('[data-pos]');if(node)toggleLock(Number(node.dataset.pos));});
+  $('board').addEventListener('keydown',e=>{const node=e.target.closest('[data-pos]');if(node&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleLock(Number(node.dataset.pos));}});
+  $('rerollBtn').addEventListener('click',()=>{
+    if(busy)return;
+    const positions=labels.map((_,i)=>i).filter(i=>!locked.has(i));
+    const vals=shuffle(positions.map(i=>labels[i]));
+    positions.forEach((p,i)=>{labels[p]=vals[i];});
+    spent+=cost();attempts++;clearAnalysis();render();
+    $('status').textContent='已重洗 '+positions.length+' 個未鎖角，消耗 '+cost()+' 素材。';
+  });
+  $('clearLocksBtn').addEventListener('click',()=>{if(busy)return;locked.clear();clearAnalysis();render();$('status').textContent='已解除全部鎖定。';});
+  $('resetCostBtn').addEventListener('click',()=>{if(busy)return;spent=0;attempts=0;render();$('status').textContent='素材與重洗次數已歸零。';});
+  ['targetInput','sampleCount'].forEach(id=>$(id).addEventListener('input',clearAnalysis));
+  function* permutations(values){
+    const a=values.slice();
+    function* rec(k){if(k===a.length){yield a.slice();return;}for(let i=k;i<a.length;i++){[a[k],a[i]]=[a[i],a[k]];yield*rec(k+1);[a[k],a[i]]=[a[i],a[k]];}}
+    yield*rec(0);
+  }
+  function setBusy(value){
+    busy=value;
+    ['rerollBtn','clearLocksBtn','resetCostBtn','targetInput','sampleCount','simulateBtn'].forEach(id=>{$(id).disabled=value;});
+    $('simulateBtn').textContent=value?'計算中…':'計算成功率';$('cancelBtn').hidden=!value;render();
+  }
+  function wilson(success,total){
+    const z=1.96,p=success/total,den=1+z*z/total;
+    const center=(p+z*z/(2*total))/den,half=z*Math.sqrt(p*(1-p)/total+z*z/(4*total*total))/den;
+    return [Math.max(0,center-half),Math.min(1,center+half)];
+  }
+  $('cancelBtn').addEventListener('click',()=>{cancelled=true;});
+  $('simulateBtn').addEventListener('click',async()=>{
+    if(busy)return;
+    const raw=$('targetInput').value.trim();
+    if(raw===''||!Number.isFinite(Number(raw))||Number(raw)<1||Number(raw)>100){$('status').textContent='請輸入 1 至 100 的目標面積。';$('targetInput').focus();return;}
+    const target=Number(raw),threshold=target/100,snapshot=labels.slice(),exact=locked.size===6,perCost=cost();
+    const unlocked=snapshot.map((_,i)=>i).filter(i=>!locked.has(i)),vals=unlocked.map(i=>snapshot[i]);
+    const total=exact?720:Number($('sampleCount').value),iterator=exact?permutations(vals):null;
+    let runs=0,success=0,sum=0,best=0;cancelled=false;setBusy(true);
+    $('status').textContent='正在分析目前鎖法…';
+    try{
+      while(runs<total){
+        if(cancelled){$('simResult').textContent='已取消計算；盤面與素材統計未變動。';$('status').textContent='計算已取消。';return;}
+        const limit=Math.min(runs+100,total);
+        while(runs<limit){
+          const perm=exact?iterator.next().value:shuffle(vals),candidate=snapshot.slice();
+          unlocked.forEach((p,i)=>{candidate[p]=perm[i];});
+          const r=Geometry.areaRatio(candidate);runs++;sum+=r;best=Math.max(best,r);if(r>=threshold-1e-10)success++;
+        }
+        $('simResult').innerHTML='<span>分析進度 '+runs.toLocaleString()+' / '+total.toLocaleString()+'</span><progress max="'+total+'" value="'+runs+'" aria-label="分析進度"></progress>';
+        await new Promise(resolve=>setTimeout(resolve,0));
+      }
+      if(cancelled){$('simResult').textContent='已取消計算。';$('status').textContent='計算已取消。';return;}
+      const prob=success/runs,ci=wilson(success,runs),expected=prob?Math.round(perCost/prob).toLocaleString():null;
+      $('simResult').innerHTML='<div class="result-grid">'+
+        '<div><span>分析方法</span><strong>'+(exact?'完整枚舉':'隨機抽樣')+'</strong></div>'+
+        '<div><span>≥ '+target+'% 的排列</span><strong>'+success.toLocaleString()+' / '+runs.toLocaleString()+'</strong></div>'+
+        '<div><span>'+(exact?'精確成功率':'估計成功率')+'</span><strong>'+(prob*100).toFixed(prob<.001?4:3)+'%</strong></div>'+
+        '<div><span>平均面積</span><strong>'+(sum/runs*100).toFixed(2)+'%</strong></div>'+
+        '<div><span>'+(exact?'最高可達面積':'抽樣最高面積')+'</span><strong>'+(best*100).toFixed(2)+'%</strong></div>'+
+        '<div><span>固定鎖法的期望追加素材</span><strong>'+(expected?'約 '+expected:exact?'無法達標':'尚無法估計')+'</strong></div></div>'+
+        (exact?'<p>已分析全部 720 種排列。期望素材從下一次重洗起算，假設每次獨立且等機率；並非保證用量。</p>':'<p>抽樣的 95% 信賴區間：約 '+(ci[0]*100).toFixed(3)+'% ～ '+(ci[1]*100).toFixed(3)+'%。'+(success===0?'抽樣未命中不代表成功率為零，可增加抽樣次數。':'期望素材為抽樣估計，可能有較大波動。')+'</p>');
+      $('status').textContent='分析完成；計算不消耗素材。';
+    }catch(error){console.error(error);$('simResult').textContent='分析未完成，請重新計算。';$('status').textContent='計算發生錯誤。';}
+    finally{setBusy(false);}
+  });
+  render();$('status').textContent='已建立隨機初始盤面。';
+})();
+</script>
+</body>
+</html>
