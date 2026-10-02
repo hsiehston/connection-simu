@@ -1,249 +1,209 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1720">
-  <meta name="description" content="十二邊形連線模擬器：鎖定、隨機重洗、覆蓋面積與成功率分析。">
-  <title>12 邊形連線模擬器</title>
-  <style>
-    :root{color-scheme:dark;--bg:#0b1720;--panel:#142530;--card:#1a303c;--text:#e9f2f3;--muted:#a8bdc6;--border:#344d5a;--accent:#71e4c5;--accent-bg:#204c48}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif}main{max-width:1160px;margin:auto;padding:36px 24px 24px}h1{margin:0;font-size:clamp(25px,4vw,36px);letter-spacing:-.04em}h2{margin:0;font-size:17px}.eyebrow{font-size:12px;letter-spacing:.16em;color:var(--accent);margin:0 0 5px}.intro{color:var(--muted);margin:8px 0 26px}.layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(310px,.85fr);gap:20px;align-items:start}.panel{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px}.board-panel{position:sticky;top:18px}.board-head{display:flex;justify-content:space-between;align-items:center;gap:16px}.small{font-size:13px;color:var(--muted)}.badge{text-align:right}.badge strong{display:block;font-size:28px;color:var(--accent);line-height:1.3;font-variant-numeric:tabular-nums}svg{display:block;width:100%;max-width:560px;margin:12px auto;overflow:visible}.node{cursor:pointer;outline:none}.node:focus-visible circle:first-child{stroke:#ffdb8b;stroke-width:5}.legend{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--accent);margin-right:6px}.hint{margin:14px 0 0;color:var(--muted);font-size:13px}.side{display:grid;gap:16px}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button,input,select{font:inherit;color:inherit}button{border:1px solid var(--border);border-radius:10px;min-height:46px;padding:9px 13px;background:var(--card);cursor:pointer;line-height:1.4}button:hover:not(:disabled){border-color:var(--accent);background:var(--accent-bg)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:3px}button.primary{background:var(--accent);color:#102d28;border-color:var(--accent);font-weight:700}button.primary:hover:not(:disabled){background:#9befd7}button:disabled{opacity:.5;cursor:wait}.wide{grid-column:1/-1}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:13px 16px}.stat span{display:block;font-size:12px;color:var(--muted)}.stat strong{font-size:22px;font-variant-numeric:tabular-nums}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}label{font-size:13px;color:var(--muted)}input,select{width:100%;min-height:46px;min-width:0;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:8px 10px;margin-top:5px;font-size:16px;color:var(--text)}.unit{display:flex;align-items:center;gap:7px}.result{margin-top:14px;background:var(--bg);border-radius:11px;padding:15px;font-size:14px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.result-grid span{display:block;font-size:12px;color:var(--muted)}.result-grid strong{font-size:17px;font-variant-numeric:tabular-nums}.result p{margin:12px 0 0;font-size:12px;color:var(--muted)}#status{min-height:26px;color:var(--accent);font-size:13px;margin:0 3px}progress{display:block;width:100%;accent-color:var(--accent);height:9px;margin:12px 0}footer{margin:25px 0 0;color:var(--muted);font-size:12px}details{margin-top:14px;color:var(--muted);font-size:12px}summary{cursor:pointer}details p{margin-bottom:0}.toast{min-height:20px}noscript{display:block;background:#522f28;padding:20px}
-    @media(max-width:800px){main{padding:24px 16px}.layout{grid-template-columns:1fr}.board-panel{position:static}.panel{padding:17px}svg{max-width:460px}.intro{margin-bottom:18px}}@media(prefers-reduced-motion:no-preference){button{transition:background .15s,border-color .15s}}
-    .animation-control{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:17px;padding-top:15px;border-top:1px solid var(--border)}.animation-control strong{display:block;font-size:14px}.animation-control p{margin:2px 0 0;font-size:12px;color:var(--muted)}button.animation-switch{display:flex;align-items:center;gap:9px;border:0;background:transparent;padding:6px;flex-shrink:0;min-height:44px}.switch-track{width:44px;height:26px;border-radius:20px;background:var(--border);padding:3px;display:block}.switch-thumb{display:block;width:20px;height:20px;border-radius:50%;background:var(--text);transition:transform .18s}.animation-switch[aria-checked="true"] .switch-track{background:var(--accent)}.animation-switch[aria-checked="true"] .switch-thumb{background:#102d28;transform:translateX(18px)}.animation-switch span:last-child{font-size:13px;min-width:26px}.connection-caption{text-align:center;color:var(--accent);font-size:12px;min-height:20px;margin:0 0 10px;font-variant-numeric:tabular-nums}.node.tracing circle:first-child{stroke:#ffdb8b;stroke-width:3;filter:drop-shadow(0 0 6px #ffdb8b80)}#connectionHead{pointer-events:none;filter:drop-shadow(0 0 5px #71e4c5)}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1720">
+<title>連線鎖法分析</title>
+<meta name="description" content="輸入或辨識遊戲盤面，高亮三連、推薦六鎖，直接顯示精確成功率。">
+<style>
+:root{color-scheme:dark;--bg:#0b1720;--panel:#142530;--card:#1a303c;--text:#e9f2f3;--muted:#a8bdc6;--border:#344d5a;--accent:#71e4c5;--accent-bg:#204c48;--gold:#ffce75;--gold-bg:#423b29}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif}main{max-width:1080px;margin:auto;padding:22px 20px}h1{font-size:25px;letter-spacing:-.04em;margin:0}h2{font-size:15px;margin:0}.intro{margin:3px 0 15px;font-size:13px;color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:15px}.import{margin-bottom:14px}.input-row{display:flex;align-items:center;gap:8px;margin-top:7px}.order-wrap{flex:1;min-width:0}.order-wrap input{font-variant-numeric:tabular-nums}.subtle{color:var(--muted);font-size:12px}.input-caption{margin:6px 0 0;font-size:12px;color:var(--muted)}.error{color:#ffadad}.layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:14px;align-items:start}.side{display:grid;gap:12px}.board-head{display:flex;justify-content:space-between;align-items:center}.area{font-size:13px;color:var(--muted)}.area strong{color:var(--accent)}svg{width:100%;max-width:440px;display:block;margin:0 auto;overflow:visible}.node{cursor:pointer;outline:0}.node:focus-visible circle:first-child{stroke:#fff;stroke-width:4}.node.suggested circle:first-child{stroke:var(--gold);stroke-width:3;fill:var(--gold-bg)}.node.tracing circle:first-child{filter:drop-shadow(0 0 5px #71e4c588)}.node.locked circle:first-child{stroke:var(--accent);stroke-width:3;fill:var(--accent-bg)}.legend{display:flex;justify-content:center;gap:15px;font-size:12px;color:var(--muted)}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;background:var(--accent)}.gold{background:var(--gold)}.caption{font-size:12px;color:var(--accent);text-align:center;min-height:18px;margin:0 0 6px}.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:12px}.toolbar button{min-height:36px;padding:7px 10px;font-size:13px}.toolbar .primary{flex:1}.animation-switch{display:flex;align-items:center;gap:6px;background:transparent!important;border:0;padding:4px!important;font-size:12px!important}.track{display:block;width:34px;height:20px;border-radius:20px;background:var(--border);padding:3px}.thumb{display:block;width:14px;height:14px;background:var(--text);border-radius:50%;transition:transform .15s}.animation-switch[aria-checked=true] .track{background:var(--accent)}.animation-switch[aria-checked=true] .thumb{transform:translateX(14px);background:#102d28}.stats-line{margin-top:8px;font-size:11px;color:var(--muted);display:flex;gap:5px 12px;flex-wrap:wrap;font-variant-numeric:tabular-nums}.stats-line b{color:var(--text);font-weight:500}.stats-line button{background:transparent;border:0;min-height:0;padding:0;color:var(--muted);font-size:11px;text-decoration:underline}.success-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.goal{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:12px;color:var(--muted)}.goal input{width:67px;min-height:32px;margin:0;font-size:14px;padding:4px 7px}.probability{display:block;color:var(--accent);font-size:36px;line-height:1.3;letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin:8px 0 2px}.result-row{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px}.recommend-head{display:flex;justify-content:space-between;gap:10px}.badge{font-size:11px;border:1px solid var(--border);border-radius:20px;padding:2px 7px;color:var(--gold)}.recommended{margin-top:10px;padding:11px;border-radius:10px;background:var(--bg)}.recommend-order{font-weight:600;font-size:16px;color:var(--gold);margin:3px 0}.recommend-detail{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;color:var(--muted)}.recommend-detail strong{font-size:21px;color:var(--accent)}.triple-list{display:grid;gap:7px;margin-top:9px}.triple{padding:9px 10px;background:var(--bg);border-radius:9px;font-size:12px}.triple-top{display:flex;justify-content:space-between;gap:8px}.triple strong{color:var(--gold);font-size:14px}.triple-actions{display:flex;gap:6px;margin-top:6px}.triple-actions button{min-height:30px;padding:4px 8px;font-size:12px}.triple-note{color:var(--muted);font-size:11px;margin:4px 0 0}.empty{color:var(--muted);font-size:13px;margin:10px 0 0}.inline-note{font-size:11px;color:var(--muted);margin:8px 0 0}#status{font-size:12px;color:var(--accent);margin:8px 2px 0;min-height:19px}button,input,select{font:inherit;color:inherit}button,.file-button{border:1px solid var(--border);border-radius:8px;min-height:38px;padding:7px 11px;background:var(--card);cursor:pointer;line-height:1.4;white-space:nowrap;font-size:13px}.file-button{display:inline-flex;align-items:center}button:hover:not(:disabled),.file-button:hover{border-color:var(--accent)}button:disabled{opacity:.5;cursor:wait}.primary{color:#102d28;background:var(--accent);border-color:var(--accent);font-weight:600}input{width:100%;min-height:38px;border:1px solid var(--border);border-radius:8px;padding:7px 10px;background:var(--bg);font-size:15px;min-width:0}button:focus-visible,input:focus-visible,.file-button:focus-within{outline:3px solid var(--accent);outline-offset:2px}.file-button input{position:absolute;width:1px;height:1px;padding:0;opacity:0}details{font-size:12px;color:var(--muted);margin-top:10px}summary{cursor:pointer}details p{margin:7px 0 0}.image-import{margin-top:10px;border-top:1px solid var(--border);padding-top:10px}.image-toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.image-toolbar button{min-height:34px;font-size:12px}.image-preview{max-width:400px;margin:10px auto}.image-preview canvas{display:block;width:100%;border-radius:8px;touch-action:none;cursor:crosshair}.review-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:5px;margin:10px 0 6px}.review-grid label{font-size:10px;color:var(--muted);text-align:center}.review-grid input{padding:4px 0;text-align:center;min-height:32px;font-size:14px}.review-grid input.uncertain{border-color:var(--gold);background:var(--gold-bg)}progress{width:100%;height:8px;accent-color:var(--accent)}[hidden]{display:none!important}#connectionHead{pointer-events:none;filter:drop-shadow(0 0 5px #71e4c5)}noscript{display:block;padding:20px;background:#522f28}@media(max-width:720px){main{padding:16px 12px}.layout{grid-template-columns:1fr}.board-panel{padding:10px 12px}svg{max-width:340px}.input-row{flex-wrap:wrap}.order-wrap{flex-basis:100%}.review-grid{grid-template-columns:repeat(6,minmax(0,1fr))}.probability{font-size:32px}.panel{padding:13px}.side{gap:10px}}
+</style>
 </head>
-<body>
-<noscript>此模擬器需要啟用 JavaScript。</noscript>
+<body><noscript>請啟用 JavaScript 以使用鎖法分析。</noscript>
 <main>
-  <p class="eyebrow">TWELVE · CONNECTION LAB</p>
-  <h1>12 邊形連線模擬器</h1>
-  <p class="intro">鎖住想保留的角，重洗其餘編號，看看距離目標面積還有多遠。</p>
-  <div class="layout">
-    <section class="panel board-panel" aria-labelledby="board-title">
-      <div class="board-head"><div><h2 id="board-title">目前盤面</h2><div class="small">1 → 2 → … → 12 → 1</div></div><div class="badge"><span class="small">覆蓋面積</span><strong id="areaText">—</strong></div></div>
-      <svg id="board" viewBox="0 0 440 440" role="group" aria-label="十二邊形連線盤面，點擊角上的編號以鎖定或解鎖"></svg>
-      <p id="connectionCaption" class="connection-caption">1 → 2 → … → 12 → 1</p>
-      <div class="legend"><span><i class="dot"></i>已鎖定</span><span>點擊編號：鎖定／解除鎖定</span></div>
-      <p class="hint">最多鎖 6 個角。填色採奇偶規則（even-odd），面積以完整十二邊形為 100%。</p>
-    </section>
-    <div class="side">
-      <section class="panel" aria-labelledby="control-title">
-        <h2 id="control-title">重洗與鎖定</h2>
-        <div class="buttons">
-          <button id="rerollBtn" class="primary wide" type="button">隨機重洗未鎖角</button>
-          <button id="clearLocksBtn" type="button">解除全部鎖定</button>
-          <button id="resetCostBtn" type="button">重設素材統計</button>
-        </div>
-        <div class="animation-control">
-          <div><strong id="animationLabel">連線動畫</strong><p>重洗後依序繪出 1 → 12 → 1</p></div>
-          <button id="animationSwitch" class="animation-switch" type="button" role="switch" aria-checked="true" aria-labelledby="animationLabel"><span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span><span id="animationState" aria-hidden="true">開啟</span></button>
-        </div>
-        <details><summary>查看素材消耗規則</summary><p>鎖定 0／1／2／3／4／5／6 個角，每次分別消耗 10／10／30／60／100／150／220 素材。此表沿用原模擬器設定。</p></details>
-      </section>
-      <div class="stats" aria-label="素材統計">
-        <div class="stat"><span>鎖定數</span><strong id="lockCount">0 / 6</strong></div>
-        <div class="stat"><span>每次素材</span><strong id="costNow">10</strong></div>
-        <div class="stat"><span>已重洗</span><strong id="attemptCount">0</strong></div>
-        <div class="stat"><span>已消耗素材</span><strong id="spentText">0</strong></div>
-      </div>
-      <section class="panel" aria-labelledby="analysis-title">
-        <h2 id="analysis-title">目前鎖法的成功率</h2>
-        <div class="form">
-          <label>目標面積<div class="unit"><input id="targetInput" type="number" min="1" max="100" step="0.1" value="90" aria-label="目標面積百分比"><span>%</span></div></label>
-          <label>未滿六鎖時的抽樣<select id="sampleCount"><option value="1000">1,000 次</option><option value="3000" selected>3,000 次</option><option value="10000">10,000 次</option></select></label>
-        </div>
-        <button id="simulateBtn" class="primary" type="button" style="width:100%">計算成功率</button>
-        <button id="cancelBtn" type="button" style="width:100%;margin-top:8px" hidden>取消計算</button>
-        <div id="simResult" class="result" aria-live="polite">六鎖時完整枚舉剩餘 6! = 720 種排列；未滿六鎖使用隨機抽樣。</div>
-      </section>
-      <p id="status" role="status" aria-live="polite"></p>
-    </div>
-  </div>
-  <footer>重洗假設：未鎖定的編號均勻隨機排列。面積與成功率依此模型計算。</footer>
+<h1>連線鎖法分析</h1><p class="intro">輸入目前盤面，找出值得保留的三連與六鎖。</p>
+<section class="panel import" aria-labelledby="import-title">
+<h2 id="import-title">盤面順序 <span class="subtle">最上方開始，順時針</span></h2>
+<div class="input-row"><label class="order-wrap"><span class="subtle" hidden>12 個編號</span><input id="orderInput" aria-label="從頂端順時針輸入12個編號" placeholder="例：1 10 11 7 3 6 2 8 5 12 9 4" autocomplete="off" spellcheck="false"></label><button id="applyOrder" class="primary" type="button">套用順序</button><label class="file-button">辨識圖片<input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp" aria-label="選擇遊戲截圖"></label></div>
+<p id="inputMessage" class="input-caption" role="status">輸入 1–12 各一次，可用空白或逗號分隔；套用後自動分析。</p>
+<div id="imageImport" class="image-import" hidden>
+<div class="image-toolbar"><span class="subtle">拖曳框住 12 個角，圓點應對準數字中心。</span><button id="recognizeImage" type="button" class="primary">辨識數字</button><button id="closeImage" type="button">收起圖片</button></div>
+<div class="image-preview"><canvas id="imageCanvas" aria-label="遊戲截圖框選區，拖曳框住十二個數字"></canvas></div><progress id="ocrProgress" max="12" value="0" hidden></progress>
+<div id="reviewGrid" class="review-grid" hidden></div><p id="ocrMessage" class="input-caption">圖片只在本機處理。請確認辨識結果，再按「套用順序」。</p>
+</div>
+</section>
+<div class="layout">
+<section class="panel board-panel" aria-labelledby="board-title">
+<div class="board-head"><h2 id="board-title">目前盤面</h2><span class="area">面積 <strong id="areaText">—</strong></span></div>
+<svg id="board" viewBox="0 0 440 440" role="group" aria-label="十二個角，點擊編號可鎖定或解除鎖定"></svg>
+<p id="connectionCaption" class="caption"></p><div class="legend"><span><i class="dot gold"></i>值得保留的三連</span><span><i class="dot"></i>已鎖定</span></div>
+<div class="toolbar"><button id="rerollBtn" class="primary" type="button">重洗未鎖角</button><button id="clearLocksBtn" type="button">全部解鎖</button><button id="animationSwitch" class="animation-switch" type="button" role="switch" aria-checked="true" aria-label="連線動畫"><span>動畫</span><span class="track" aria-hidden="true"><span class="thumb"></span></span></button></div>
+<div class="stats-line"><span>鎖 <b id="lockCount">0 / 6</b></span><span>每次 <b id="costNow">10</b></span><span>已洗 <b id="attemptCount">0</b></span><span>用料 <b id="spentText">0</b></span><button id="resetCostBtn" type="button">歸零</button></div>
+</section>
+<div class="side">
+<section class="panel" aria-labelledby="success-title"><div class="success-head"><h2 id="success-title">目前鎖法 · <span id="currentLockedTitle">0 鎖</span></h2><label class="goal">目標 <input id="targetInput" type="number" min="90" max="100" step="0.1" value="90" aria-label="目標面積百分比">%</label></div><strong id="currentProbability" class="probability">—</strong><div class="result-row"><span id="currentFraction">精確成功率</span><span id="expectedCost">—</span></div><p id="currentLockLabels" class="inline-note">點擊編號或採用下方推薦鎖法。</p></section>
+<section class="panel" aria-labelledby="recommend-title"><div class="recommend-head"><h2 id="recommend-title">最佳六鎖</h2><span id="recommendGrade" class="badge">分析中</span></div><div id="bestRecommendation"></div><div id="tripleList" class="triple-list"></div><p id="tripleSummary" class="inline-note"></p>
+<details><summary>成功率與保留線如何判斷？</summary><p>依正十二邊形、1 → 12 → 1，所有被線段圍住的區域都計入面積。目標支援 90%–100%，所有鎖法皆為完整排列的精確機率。</p><p>三連指相鄰三個幾何角的編號連續遞增或遞減，包含 12 → 1。橙色高亮表示這個三連可補成六鎖，成功率至少達同目標六連基準的三分之一。實際保留線會隨目標更新，詳見三連提示。</p><p>期望素材從下一次重洗起算，不含尋找此盤面的成本，也不是保證用量。素材設定：0／1／2／3／4／5／6 鎖每次為 10／10／30／60／100／150／220。</p></details>
+</section>
+</div>
+</div><p id="status" role="status"></p>
 </main>
+<script src="success-catalogue.js"></script><script src="numeral-templates.js"></script>
 <script>
 'use strict';
-// Standalone static page: no build step, external assets, network requests, or backend.
-const Geometry = (() => {
-  const N=12, EPS=1e-10;
-  const points=Array.from({length:N},(_,i)=>{const a=-Math.PI/2+i*Math.PI/6;return {x:Math.cos(a),y:Math.sin(a)};});
-  const baseArea=N*Math.sin(2*Math.PI/N)/2;
-  function areaRatio(labels){
-    const positions=Array(N);
-    labels.forEach((label,pos)=>{positions[label-1]=pos;});
-    const poly=positions.map(pos=>points[pos]);
-    const edges=poly.map((a,i)=>({a,b:poly[(i+1)%N]}));
-    const cuts=poly.map(p=>p.y);
-    // Between vertex/intersection heights, edge order is fixed and width is linear.
-    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
-      const {a,b}=edges[i],{a:c,b:d}=edges[j];
-      const rx=b.x-a.x,ry=b.y-a.y,sx=d.x-c.x,sy=d.y-c.y;
-      const den=rx*sy-ry*sx;
-      if(Math.abs(den)<EPS)continue;
-      const qx=c.x-a.x,qy=c.y-a.y;
-      const t=(qx*sy-qy*sx)/den,u=(qx*ry-qy*rx)/den;
-      if(t>EPS&&t<1-EPS&&u>EPS&&u<1-EPS)cuts.push(a.y+t*ry);
-    }
-    const ys=cuts.sort((a,b)=>a-b).filter((y,i,arr)=>i===0||y-arr[i-1]>EPS);
-    let area=0;
-    for(let i=0;i<ys.length-1;i++){
-      const y=(ys[i]+ys[i+1])/2;
-      const xs=[];
-      for(const {a,b} of edges)if((a.y>y)!==(b.y>y))xs.push(a.x+(y-a.y)*(b.x-a.x)/(b.y-a.y));
-      xs.sort((a,b)=>a-b);
-      let width=0;
-      for(let k=0;k+1<xs.length;k+=2)width+=xs[k+1]-xs[k];
-      area+=width*(ys[i+1]-ys[i]);
-    }
-    return Math.max(0,Math.min(1,area/baseArea));
-  }
-  return {points,areaRatio};
+const Geometry=(()=>{
+ const points=Array.from({length:12},(_,i)=>{const a=-Math.PI/2+i*Math.PI/6;return {x:Math.cos(a),y:Math.sin(a)};});
+ function enclosedRegion(labels){
+  const pos=Array(12);labels.forEach((l,p)=>pos[l-1]=p);const poly=pos.map(p=>points[p]),edges=poly.map((a,i)=>[a,poly[(i+1)%12]]),cuts=edges.map(()=>[0,1]);
+  for(let i=0;i<12;i++)for(let j=i+1;j<12;j++){const[a,b]=edges[i],[c,d]=edges[j],rx=b.x-a.x,ry=b.y-a.y,sx=d.x-c.x,sy=d.y-c.y,den=rx*sy-ry*sx;if(Math.abs(den)<1e-10)continue;const qx=c.x-a.x,qy=c.y-a.y,t=(qx*sy-qy*sx)/den,u=(qx*ry-qy*rx)/den;if(t>1e-10&&t<1-1e-10&&u>1e-10&&u<1-1e-10){cuts[i].push(t);cuts[j].push(u);}}
+  const nodes=[],map=new Map(),adj=[];
+  function node(p){const key=Math.round(p.x*1e9)+','+Math.round(p.y*1e9);if(!map.has(key)){map.set(key,nodes.length);nodes.push(p);adj.push(new Set());}return map.get(key);}
+  const start=node(points[0]);
+  edges.forEach(([a,b],i)=>{const ts=cuts[i].sort((a,b)=>a-b).filter((t,i,s)=>!i||t-s[i-1]>1e-10);for(let k=0;k<ts.length-1;k++){const u=node({x:a.x+(b.x-a.x)*ts[k],y:a.y+(b.y-a.y)*ts[k]}),v=node({x:a.x+(b.x-a.x)*ts[k+1],y:a.y+(b.y-a.y)*ts[k+1]});if(u!==v){adj[u].add(v);adj[v].add(u);}}});
+  const neighbors=adj.map((ns,u)=>[...ns].sort((v,w)=>Math.atan2(nodes[v].y-nodes[u].y,nodes[v].x-nodes[u].x)-Math.atan2(nodes[w].y-nodes[u].y,nodes[w].x-nodes[u].x)));
+  const first=neighbors[start][neighbors[start].length-1],boundary=[];let u=start,v=first,area=0;
+  for(let guard=0;guard<500;guard++){boundary.push(nodes[u]);area+=nodes[u].x*nodes[v].y-nodes[u].y*nodes[v].x;const ns=neighbors[v],w=ns[(ns.indexOf(u)-1+ns.length)%ns.length];u=v;v=w;if(u===start&&v===first)break;}
+  return {ratio:Math.max(0,Math.min(1,Math.abs(area)/6)),boundary};
+ }
+ return {points,enclosedRegion,areaRatio:labels=>enclosedRegion(labels).ratio};
 })();
-(() => {
-  const $=id=>document.getElementById(id),N=12;
-  const costs=[10,10,30,60,100,150,220];
-  let labels=shuffle(Array.from({length:N},(_,i)=>i+1));
-  const locked=new Set();
-  let spent=0,attempts=0,busy=false,cancelled=false;
-  let animationEnabled=true,animationStart=0,animationFrame=null;
-  const segmentDuration=150; // Every numbered connection takes the same time.
-  const svgPts=Geometry.points.map(p=>({x:220+166*p.x,y:220+166*p.y}));
-  function shuffle(values){const a=values.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-  function cost(){return costs[locked.size];}
-  function clearAnalysis(){$('simResult').textContent='盤面或設定已改變，按「計算成功率」重新分析。';}
-  function render(replayAnimation=false){
-    $('areaText').textContent=(Geometry.areaRatio(labels)*100).toFixed(2)+'%';
-    $('lockCount').textContent=locked.size+' / 6';$('costNow').textContent=cost().toLocaleString();
-    $('attemptCount').textContent=attempts.toLocaleString();$('spentText').textContent=spent.toLocaleString();
-    const pos=Array(N);labels.forEach((v,p)=>pos[v-1]=p);
-    const path=pos.map((p,i)=>(i?'L':'M')+svgPts[p].x+' '+svgPts[p].y).join(' ')+' Z';
-    let html='<polygon points="'+svgPts.map(p=>p.x+','+p.y).join(' ')+'" fill="none" stroke="var(--border)" stroke-width="2"/>';
-    html+='<path id="connectionFill" d="'+path+'" fill="var(--accent)" fill-opacity="'+(animationEnabled?0:.2)+'" fill-rule="evenodd"/>';
-    html+='<path id="connectionStroke" d="'+path+'" pathLength="1" fill="none" stroke="var(--accent)" stroke-opacity=".8" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="'+(animationEnabled?1:0)+'"/>';
-    html+='<g id="connectionHead" aria-hidden="true" opacity="0"><circle r="9" fill="var(--accent)" fill-opacity=".2"/><circle r="3.5" fill="#dcfff5"/></g>';
-    svgPts.forEach((p,i)=>{
-      const isLocked=locked.has(i);
-      html+='<g class="node" data-pos="'+i+'" tabindex="'+(busy?'-1':'0')+'" role="button" aria-pressed="'+isLocked+'" aria-disabled="'+busy+'" aria-label="編號 '+labels[i]+(isLocked?'，已鎖定，點擊解鎖':'，點擊鎖定')+'">'+
-        '<circle cx="'+p.x+'" cy="'+p.y+'" r="23" fill="'+(isLocked?'var(--accent-bg)':'var(--panel)')+'" stroke="'+(isLocked?'var(--accent)':'var(--border)')+'" stroke-width="'+(isLocked?3:2)+'"/>'+
-        '<text x="'+p.x+'" y="'+(p.y+6)+'" text-anchor="middle" font-size="18" font-weight="700" fill="var(--text)">'+labels[i]+'</text>'+
-        (isLocked?'<circle cx="'+(p.x+18)+'" cy="'+(p.y-18)+'" r="5" fill="var(--accent)"/>':'')+'</g>';
-    });
-    $('board').innerHTML=html;
-    if(replayAnimation)animationStart=performance.now();
-    drawConnection(pos);
+const LockAnalysis=(()=>{
+ const factorial=[1];for(let i=1;i<=12;i++)factorial.push(factorial[i-1]*i);
+ const popcount=mask=>{let n=0;while(mask){mask&=mask-1;n++;}return n;};
+ const sixMasks=Array.from({length:4096},(_,i)=>i).filter(m=>popcount(m)===6);
+ function parseOrder(text){
+  const normalized=text.replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xfee0));
+  const parts=normalized.trim().split(/[\s,，、;；]+/).filter(Boolean);
+  if(parts.length!==12||parts.some(p=>!/^\d+$/.test(p)))throw Error('請輸入 12 個整數，以空白或逗號分隔。');
+  const order=parts.map(Number);
+  if(order.some(v=>v<1||v>12))throw Error('每個編號必須介於 1 至 12。');
+  if(new Set(order).size!==12)throw Error('1–12 必須各出現一次，不能重複或缺少。');
+  return order;
+ }
+ function countsFor(order,target){
+  const counts=new Uint32Array(4096);
+  for(const entry of SUCCESS_CATALOGUE){
+   if(entry.area+1e-10<target/100)continue;
+   for(let rotation=0;rotation<12;rotation++){
+    let matched=0;for(let p=0;p<12;p++)if(order[p]===entry.order[(p-rotation+12)%12])matched|=1<<p;
+    counts[matched]++;
+   }
   }
-  // Animate only the presentation. Area and probability use the unchanged geometry.
-  function drawConnection(pos){
-    if(animationFrame!==null){cancelAnimationFrame(animationFrame);animationFrame=null;}
-    const stroke=$('connectionStroke'),fill=$('connectionFill'),head=$('connectionHead');
-    const nodes=[...$('board').querySelectorAll('.node')];
-    const route=pos.map(p=>svgPts[p]);route.push(route[0]);
-    const lengths=Array.from({length:N},(_,i)=>Math.hypot(route[i+1].x-route[i].x,route[i+1].y-route[i].y));
-    const total=lengths.reduce((a,b)=>a+b,0),cumulative=[0];
-    lengths.forEach(length=>cumulative.push(cumulative[cumulative.length-1]+length));
-    let active=-1;
-    function tick(now){
-      const progress=animationEnabled?Math.min(N,Math.max(0,(now-animationStart)/segmentDuration)):N;
-      const done=progress>=N,segment=Math.min(N-1,Math.floor(progress)),fraction=done?1:progress-segment;
-      const distance=cumulative[segment]+lengths[segment]*fraction;
-      stroke.setAttribute('stroke-dashoffset',String(1-distance/total));
-      fill.setAttribute('fill-opacity',String(.2*Math.max(0,(progress-(N-1)))));
-      head.setAttribute('opacity',done?'0':'1');
-      if(!done){
-        const a=route[segment],b=route[segment+1];
-        head.setAttribute('transform','translate('+(a.x+(b.x-a.x)*fraction)+' '+(a.y+(b.y-a.y)*fraction)+')');
-      }
-      if(active!==segment||done){
-        nodes.forEach((node,i)=>node.classList.toggle('tracing',!done&&(i===pos[segment]||i===pos[(segment+1)%N])));
-        $('connectionCaption').textContent=done?(animationEnabled?'連線完成 · 1 → 12 → 1':'靜態連線 · 1 → 12 → 1'):'正在連線 '+(segment+1)+' → '+((segment+1)%N+1)+' · '+(segment+1)+' / 12';
-        active=segment;
-      }
-      animationFrame=done?null:requestAnimationFrame(tick);
-    }
-    tick(performance.now());
+  // Sum over all supersets: a matching vertex is optional unless it is locked.
+  for(let bit=0;bit<12;bit++)for(let mask=0;mask<4096;mask++)if(!(mask&(1<<bit)))counts[mask]+=counts[mask|(1<<bit)];
+  return counts;
+ }
+ const thresholds=new Map();
+ function analyze(order,target){
+  const counts=countsFor(order,target);
+  if(!thresholds.has(target)){const reference=countsFor(Array.from({length:12},(_,i)=>i+1),target);thresholds.set(target,Math.max(1,Math.ceil(reference[63]/3)));}
+  const best=sixMasks.map(mask=>({mask,count:counts[mask]})).sort((a,b)=>b.count-a.count||a.mask-b.mask)[0];
+  const triples=[];
+  for(let p=0;p<12;p++){
+   const positions=[p,(p+1)%12,(p+2)%12],values=positions.map(i=>order[i]);
+   const a=(values[1]-values[0]+12)%12,b=(values[2]-values[1]+12)%12;
+   if(a!==b||(a!==1&&a!==11))continue;
+   const mask=positions.reduce((m,i)=>m|(1<<i),0);
+   const extension=sixMasks.filter(m=>(m&mask)===mask).map(m=>({mask:m,count:counts[m]})).sort((a,b)=>b.count-a.count||a.mask-b.mask)[0];
+   triples.push({positions,values,mask,count:counts[mask],extension,worthy:extension.count>=thresholds.get(target)});
   }
-  $('animationSwitch').addEventListener('click',()=>{
-    animationEnabled=!animationEnabled;
-    $('animationSwitch').setAttribute('aria-checked',String(animationEnabled));
-    $('animationState').textContent=animationEnabled?'開啟':'關閉';
-    render(true);
-    $('status').textContent=animationEnabled?'已開啟連線動畫。':'已關閉連線動畫，直接顯示完整盤面。';
-  });
-  function toggleLock(i){
-    if(busy)return;
-    if(locked.has(i)){locked.delete(i);$('status').textContent='已解除編號 '+labels[i]+' 的鎖定。';}
-    else if(locked.size>=6){$('status').textContent='最多只能鎖定 6 個角。';return;}
-    else{locked.add(i);$('status').textContent='已鎖定編號 '+labels[i]+'。';}
-    clearAnalysis();render();
-    $('board').querySelector('[data-pos="'+i+'"]').focus();
+  triples.sort((a,b)=>b.extension.count-a.extension.count||b.count-a.count||a.mask-b.mask);
+  return {counts,best,triples,keepThreshold:thresholds.get(target)};
+ }
+ return {parseOrder,analyze,countsFor,popcount,factorial,sixMasks};
+})();
+const NumeralRecognition=(()=>{
+ function normalizedMask(rgba,w,h){
+  const pixels=new Uint8Array(w*h),seen=new Uint8Array(w*h),components=[];
+  for(let i=0;i<w*h;i++){const r=rgba[i*4],g=rgba[i*4+1],b=rgba[i*4+2];if(Math.min(r,g,b)>155&&Math.max(r,g,b)-Math.min(r,g,b)<85)pixels[i]=1;}
+  for(let i=0;i<pixels.length;i++)if(pixels[i]&&!seen[i]){
+   const stack=[i],points=[];seen[i]=1;let minX=w,minY=h,maxX=0,maxY=0,sumX=0,sumY=0;
+   while(stack.length){const p=stack.pop(),x=p%w,y=Math.floor(p/w);points.push(p);minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);sumX+=x;sumY+=y;
+    for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const xx=x+dx,yy=y+dy;if(xx<0||xx>=w||yy<0||yy>=h)continue;const q=yy*w+xx;if(pixels[q]&&!seen[q]){seen[q]=1;stack.push(q);}}}
+   if(points.length>=3&&minY>0&&maxY<h-1)components.push({points,minX,minY,maxX,maxY,score:points.length/(1+((sumX/points.length-w/2)/(w*.3))**2+((sumY/points.length-h/2)/(h*.3))**2)});
   }
-  $('board').addEventListener('click',e=>{const node=e.target.closest('[data-pos]');if(node)toggleLock(Number(node.dataset.pos));});
-  $('board').addEventListener('keydown',e=>{const node=e.target.closest('[data-pos]');if(node&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleLock(Number(node.dataset.pos));}});
-  $('rerollBtn').addEventListener('click',()=>{
-    if(busy)return;
-    const positions=labels.map((_,i)=>i).filter(i=>!locked.has(i));
-    const vals=shuffle(positions.map(i=>labels[i]));
-    positions.forEach((p,i)=>{labels[p]=vals[i];});
-    spent+=cost();attempts++;clearAnalysis();render(true);
-    $('status').textContent='已重洗 '+positions.length+' 個未鎖角，消耗 '+cost()+' 素材。';
-  });
-  $('clearLocksBtn').addEventListener('click',()=>{if(busy)return;locked.clear();clearAnalysis();render();$('status').textContent='已解除全部鎖定。';});
-  $('resetCostBtn').addEventListener('click',()=>{if(busy)return;spent=0;attempts=0;render();$('status').textContent='素材與重洗次數已歸零。';});
-  ['targetInput','sampleCount'].forEach(id=>$(id).addEventListener('input',clearAnalysis));
-  function* permutations(values){
-    const a=values.slice();
-    function* rec(k){if(k===a.length){yield a.slice();return;}for(let i=k;i<a.length;i++){[a[k],a[i]]=[a[i],a[k]];yield*rec(k+1);[a[k],a[i]]=[a[i],a[k]];}}
-    yield*rec(0);
-  }
-  function setBusy(value){
-    busy=value;
-    ['rerollBtn','clearLocksBtn','resetCostBtn','targetInput','sampleCount','simulateBtn'].forEach(id=>{$(id).disabled=value;});
-    $('simulateBtn').textContent=value?'計算中…':'計算成功率';$('cancelBtn').hidden=!value;render();
-  }
-  function wilson(success,total){
-    const z=1.96,p=success/total,den=1+z*z/total;
-    const center=(p+z*z/(2*total))/den,half=z*Math.sqrt(p*(1-p)/total+z*z/(4*total*total))/den;
-    return [Math.max(0,center-half),Math.min(1,center+half)];
-  }
-  $('cancelBtn').addEventListener('click',()=>{cancelled=true;});
-  $('simulateBtn').addEventListener('click',async()=>{
-    if(busy)return;
-    const raw=$('targetInput').value.trim();
-    if(raw===''||!Number.isFinite(Number(raw))||Number(raw)<1||Number(raw)>100){$('status').textContent='請輸入 1 至 100 的目標面積。';$('targetInput').focus();return;}
-    const target=Number(raw),threshold=target/100,snapshot=labels.slice(),exact=locked.size===6,perCost=cost();
-    const unlocked=snapshot.map((_,i)=>i).filter(i=>!locked.has(i)),vals=unlocked.map(i=>snapshot[i]);
-    const total=exact?720:Number($('sampleCount').value),iterator=exact?permutations(vals):null;
-    let runs=0,success=0,sum=0,best=0;cancelled=false;setBusy(true);
-    $('status').textContent='正在分析目前鎖法…';
-    try{
-      while(runs<total){
-        if(cancelled){$('simResult').textContent='已取消計算；盤面與素材統計未變動。';$('status').textContent='計算已取消。';return;}
-        const limit=Math.min(runs+100,total);
-        while(runs<limit){
-          const perm=exact?iterator.next().value:shuffle(vals),candidate=snapshot.slice();
-          unlocked.forEach((p,i)=>{candidate[p]=perm[i];});
-          const r=Geometry.areaRatio(candidate);runs++;sum+=r;best=Math.max(best,r);if(r>=threshold-1e-10)success++;
-        }
-        $('simResult').innerHTML='<span>分析進度 '+runs.toLocaleString()+' / '+total.toLocaleString()+'</span><progress max="'+total+'" value="'+runs+'" aria-label="分析進度"></progress>';
-        await new Promise(resolve=>setTimeout(resolve,0));
-      }
-      if(cancelled){$('simResult').textContent='已取消計算。';$('status').textContent='計算已取消。';return;}
-      const prob=success/runs,ci=wilson(success,runs),expected=prob?Math.round(perCost/prob).toLocaleString():null;
-      $('simResult').innerHTML='<div class="result-grid">'+
-        '<div><span>分析方法</span><strong>'+(exact?'完整枚舉':'隨機抽樣')+'</strong></div>'+
-        '<div><span>≥ '+target+'% 的排列</span><strong>'+success.toLocaleString()+' / '+runs.toLocaleString()+'</strong></div>'+
-        '<div><span>'+(exact?'精確成功率':'估計成功率')+'</span><strong>'+(prob*100).toFixed(prob<.001?4:3)+'%</strong></div>'+
-        '<div><span>平均面積</span><strong>'+(sum/runs*100).toFixed(2)+'%</strong></div>'+
-        '<div><span>'+(exact?'最高可達面積':'抽樣最高面積')+'</span><strong>'+(best*100).toFixed(2)+'%</strong></div>'+
-        '<div><span>固定鎖法的期望追加素材</span><strong>'+(expected?'約 '+expected:exact?'無法達標':'尚無法估計')+'</strong></div></div>'+
-        (exact?'<p>已分析全部 720 種排列。期望素材從下一次重洗起算，假設每次獨立且等機率；並非保證用量。</p>':'<p>抽樣的 95% 信賴區間：約 '+(ci[0]*100).toFixed(3)+'% ～ '+(ci[1]*100).toFixed(3)+'%。'+(success===0?'抽樣未命中不代表成功率為零，可增加抽樣次數。':'期望素材為抽樣估計，可能有較大波動。')+'</p>');
-      $('status').textContent='分析完成；計算不消耗素材。';
-    }catch(error){console.error(error);$('simResult').textContent='分析未完成，請重新計算。';$('status').textContent='計算發生錯誤。';}
-    finally{setBusy(false);}
-  });
-  render(true);$('status').textContent='已建立隨機初始盤面。';
+  components.sort((a,b)=>b.score-a.score);if(!components.length)return null;
+  const main=components[0],chosen=[main];
+  for(const c of components.slice(1))if(c.points.length>=main.points.length*.25&&Math.min(main.maxY,c.maxY)-Math.max(main.minY,c.minY)>=Math.min(main.maxY-main.minY,c.maxY-c.minY)*.5)chosen.push(c);
+  const minX=Math.min(...chosen.map(c=>c.minX)),maxX=Math.max(...chosen.map(c=>c.maxX)),minY=Math.min(...chosen.map(c=>c.minY)),maxY=Math.max(...chosen.map(c=>c.maxY));
+  const rw=maxX-minX+1,rh=maxY-minY+1,scale=Math.min(28/rw,24/rh),nw=Math.round(rw*scale),nh=Math.round(rh*scale);
+  const source=new Uint8Array(rw*rh);chosen.forEach(c=>c.points.forEach(p=>{source[(Math.floor(p/w)-minY)*rw+(p%w-minX)]=1;}));
+  const out=new Uint8Array(896),ox=Math.floor((32-nw)/2),oy=Math.floor((28-nh)/2);
+  for(let y=0;y<nh;y++)for(let x=0;x<nw;x++)out[(y+oy)*32+x+ox]=source[Math.min(rh-1,Math.floor((y+.5)*rh/nh))*rw+Math.min(rw-1,Math.floor((x+.5)*rw/nw))];
+  return out;
+ }
+ function match(rgba,w,h){
+  const mask=normalizedMask(rgba,w,h);if(!mask)return {value:null,score:0,margin:0};
+  const scores=NUMERAL_TEMPLATES.map(t=>{let both=0,size=0;for(let i=0;i<896;i++){const v=t.bits[i]==='1'?1:0;both+=mask[i]&&v?1:0;size+=mask[i]+v;}return {value:t.value,score:size?2*both/size:0};}).sort((a,b)=>b.score-a.score);
+  return {...scores[0],margin:scores[0].score-scores[1].score};
+ }
+ return {normalizedMask,match};
+})();
+(()=>{
+ const $=id=>document.getElementById(id),costs=[10,10,30,60,100,150,220];
+ let labels=shuffle(Array.from({length:12},(_,i)=>i+1)),target=90,result=null,cacheKey='',spent=0,attempts=0;
+ const locked=new Set();let animationEnabled=true,animationStart=0,animationFrame=null;
+ const segmentDuration=150; // Milliseconds per numbered connection; keeps the current site setting.
+ const svgPts=Geometry.points.map(p=>({x:220+166*p.x,y:220+166*p.y}));
+ const maskOf=positions=>[...positions].reduce((m,p)=>m|(1<<p),0);
+ const maskLabels=mask=>labels.filter((_,i)=>mask&(1<<i));
+ const formatProbability=(count,denominator)=>(count/denominator*100).toFixed(count/denominator<.001?4:3)+'%';
+ function shuffle(values){const a=values.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+ function setMessage(message,error=false){$('inputMessage').textContent=message;$('inputMessage').classList.toggle('error',error);}
+ function updateAnalysis(){
+  const key=labels.join(',')+'|'+target;if(key!==cacheKey){result=LockAnalysis.analyze(labels,target);cacheKey=key;}
+  const mask=maskOf(locked),count=result.counts[mask],den=LockAnalysis.factorial[12-locked.size],prob=count/den;
+  $('currentProbability').textContent=formatProbability(count,den);$('currentLockedTitle').textContent=locked.size+' 鎖';
+  $('currentFraction').textContent=count.toLocaleString()+' / '+den.toLocaleString()+' · 精確值';
+  $('expectedCost').textContent=prob?'期望 '+Math.round(costs[locked.size]/prob).toLocaleString()+' 素材':'此鎖法無法達標';
+  $('currentLockLabels').textContent=locked.size?'已鎖：'+maskLabels(mask).join('、'):'目前未鎖定；點擊編號或採用推薦鎖法。';
+  const best=result.best,worthy=best.count>=result.keepThreshold;
+  $('recommendGrade').textContent=worthy?'值得保留':best.count?'低於保留線':'無成功排列';
+  $('bestRecommendation').innerHTML=best.count?'<div class="recommended"><span class="subtle">鎖住編號</span><p class="recommend-order">'+maskLabels(best.mask).join(' · ')+'</p><div class="recommend-detail"><span>'+best.count+' / 720</span><strong>'+formatProbability(best.count,720)+'</strong><button type="button" class="primary" data-mask="'+best.mask+'">採用六鎖</button></div></div>':'<p class="empty">此盤面沒有能達標的六鎖組合。可先保留三連，或重洗尋找更好的結構。</p>';
+  const shown=result.triples.slice(0,3);
+  $('tripleList').innerHTML=shown.map(t=>'<div class="triple"><div class="triple-top"><strong>'+t.values.join(' → ')+'</strong><span class="subtle">'+(t.worthy?'值得保留':'低於保留線')+'</span></div><p class="triple-note">只鎖三點 '+formatProbability(t.count,362880)+'（'+t.count+' / 362,880）</p><div class="triple-actions"><button type="button" data-mask="'+t.mask+'">鎖三點</button><button type="button" data-mask="'+t.extension.mask+'">補成六鎖 '+formatProbability(t.extension.count,720)+'</button></div></div>').join('');
+  const n=result.triples.length,w=result.triples.filter(t=>t.worthy).length;
+  $('tripleSummary').textContent=n?'找到 '+n+' 組三連，'+w+' 組達保留線'+(n>3?'；顯示前 3 組':'')+'。保留線 '+result.keepThreshold+' / 720。':'此盤面沒有外圈三連；仍會分析最佳六鎖。';
+ }
+ function render(replay=false){
+  updateAnalysis();$('areaText').textContent=(Geometry.areaRatio(labels)*100).toFixed(2)+'%';
+  $('lockCount').textContent=locked.size+' / 6';$('costNow').textContent=costs[locked.size];$('attemptCount').textContent=attempts.toLocaleString();$('spentText').textContent=spent.toLocaleString();
+  const highlights=new Set(result.triples.filter(t=>t.worthy).flatMap(t=>t.positions));
+  const pos=Array(12);labels.forEach((v,p)=>pos[v-1]=p);const path=pos.map((p,i)=>(i?'L':'M')+svgPts[p].x+' '+svgPts[p].y).join(' ')+' Z';const fillPath=Geometry.enclosedRegion(labels).boundary.map((p,i)=>(i?'L':'M')+(220+166*p.x)+' '+(220+166*p.y)).join(' ')+' Z';
+  let html='<polygon points="'+svgPts.map(p=>p.x+','+p.y).join(' ')+'" fill="none" stroke="var(--border)" stroke-width="2"/>';
+  html+='<path id="connectionFill" d="'+fillPath+'" fill="var(--accent)" fill-opacity="'+(animationEnabled?0:.2)+'" fill-rule="evenodd"/>';
+  html+='<path id="connectionStroke" d="'+path+'" pathLength="1" fill="none" stroke="var(--accent)" stroke-opacity=".8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="'+(animationEnabled?1:0)+'"/>';
+  html+='<g id="connectionHead" aria-hidden="true" opacity="0"><circle r="9" fill="var(--accent)" fill-opacity=".2"/><circle r="3.5" fill="#dcfff5"/></g>';
+  svgPts.forEach((p,i)=>{const isLocked=locked.has(i),suggested=highlights.has(i);html+='<g class="node'+(suggested?' suggested':'')+(isLocked?' locked':'')+'" data-pos="'+i+'" tabindex="0" role="button" aria-pressed="'+isLocked+'" aria-label="編號 '+labels[i]+(isLocked?'，已鎖定':'')+(suggested?'，推薦三連':'')+'"><circle cx="'+p.x+'" cy="'+p.y+'" r="22" fill="var(--panel)" stroke="var(--border)" stroke-width="2"/><text x="'+p.x+'" y="'+(p.y+6)+'" text-anchor="middle" font-size="17" font-weight="700" fill="var(--text)">'+labels[i]+'</text>'+(isLocked?'<circle cx="'+(p.x+17)+'" cy="'+(p.y-17)+'" r="4.5" fill="var(--accent)"/>':'')+'</g>';});
+  $('board').innerHTML=html;if(replay)animationStart=performance.now();drawConnection(pos);
+ }
+ function drawConnection(pos){
+  if(animationFrame!==null){cancelAnimationFrame(animationFrame);animationFrame=null;}
+  const stroke=$('connectionStroke'),fill=$('connectionFill'),head=$('connectionHead'),nodes=[...$('board').querySelectorAll('.node')];
+  const route=pos.map(p=>svgPts[p]);route.push(route[0]);const lengths=Array.from({length:12},(_,i)=>Math.hypot(route[i+1].x-route[i].x,route[i+1].y-route[i].y));const total=lengths.reduce((a,b)=>a+b,0),cumulative=[0];lengths.forEach(l=>cumulative.push(cumulative[cumulative.length-1]+l));let active=-1;
+  function tick(now){const progress=animationEnabled?Math.min(12,Math.max(0,(now-animationStart)/segmentDuration)):12,done=progress>=12,segment=Math.min(11,Math.floor(progress)),fraction=done?1:progress-segment;
+   stroke.setAttribute('stroke-dashoffset',String(1-(cumulative[segment]+lengths[segment]*fraction)/total));fill.setAttribute('fill-opacity',String(.2*Math.max(0,progress-11)));head.setAttribute('opacity',done?'0':'1');
+   if(!done){const a=route[segment],b=route[segment+1];head.setAttribute('transform','translate('+(a.x+(b.x-a.x)*fraction)+' '+(a.y+(b.y-a.y)*fraction)+')');}
+   if(active!==segment||done){nodes.forEach((node,i)=>node.classList.toggle('tracing',!done&&(i===pos[segment]||i===pos[(segment+1)%12])));$('connectionCaption').textContent=done?'1 → 12 → 1':(segment+1)+' → '+((segment+1)%12+1);active=segment;}
+   animationFrame=done?null:requestAnimationFrame(tick);
+  }tick(performance.now());
+ }
+ function toggleLock(i){if(locked.has(i))locked.delete(i);else if(locked.size>=6){$('status').textContent='最多鎖定 6 個角。';return;}else locked.add(i);render();$('board').querySelector('[data-pos="'+i+'"]').focus();$('status').textContent='鎖法成功率已更新。';}
+ $('board').addEventListener('click',e=>{const n=e.target.closest('[data-pos]');if(n)toggleLock(Number(n.dataset.pos));});
+ $('board').addEventListener('keydown',e=>{const n=e.target.closest('[data-pos]');if(n&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleLock(Number(n.dataset.pos));}});
+ document.addEventListener('click',e=>{const b=e.target.closest('button[data-mask]');if(!b)return;const mask=Number(b.dataset.mask);locked.clear();for(let i=0;i<12;i++)if(mask&(1<<i))locked.add(i);render();$('status').textContent='已採用 '+locked.size+' 鎖，成功率即時更新。';});
+ function applyOrder(){try{labels=LockAnalysis.parseOrder($('orderInput').value);locked.clear();render(true);setMessage('已套用順序；三連與成功率已更新。');$('status').textContent='套用新盤面不消耗素材；重洗統計仍保留。';}catch(e){setMessage(e.message,true);}}
+ $('applyOrder').addEventListener('click',applyOrder);$('orderInput').addEventListener('keydown',e=>{if(e.key==='Enter')applyOrder();});
+ $('targetInput').addEventListener('change',()=>{const value=Number($('targetInput').value);if($('targetInput').value.trim()===''||!Number.isFinite(value)||value<90||value>100){$('targetInput').value=target;$('status').textContent='精確分析支援 90% 至 100% 的目標。';return;}target=value;render();$('status').textContent='目標已更新為 '+target+'%。';});
+ $('rerollBtn').addEventListener('click',()=>{const positions=labels.map((_,i)=>i).filter(i=>!locked.has(i)),vals=shuffle(positions.map(i=>labels[i]));positions.forEach((p,i)=>labels[p]=vals[i]);spent+=costs[locked.size];attempts++;$('orderInput').value=labels.join(' ');render(true);setMessage('目前盤面已更新。');$('status').textContent='已重洗未鎖角，推薦鎖法已更新。';});
+ $('clearLocksBtn').addEventListener('click',()=>{locked.clear();render();$('status').textContent='已解除全部鎖定。';});$('resetCostBtn').addEventListener('click',()=>{spent=0;attempts=0;render();$('status').textContent='素材統計已歸零。';});
+ $('animationSwitch').addEventListener('click',()=>{animationEnabled=!animationEnabled;$('animationSwitch').setAttribute('aria-checked',String(animationEnabled));render(true);});
+ // Image recognition runs on this device. Uploaded pixels never go to an API.
+ let source=null,crop=null,dragStart=null,recognizing=false,worker=null,tesseractPromise=null;
+ const canvas=$('imageCanvas'),ctx=canvas.getContext('2d');
+ function drawImage(){if(!source)return;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(source,0,0,canvas.width,canvas.height);ctx.fillStyle='#0b172077';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(source,crop.x,crop.y,crop.w,crop.h,crop.x,crop.y,crop.w,crop.h);ctx.strokeStyle='#71e4c5';ctx.lineWidth=Math.max(2,canvas.width/250);ctx.strokeRect(crop.x,crop.y,crop.w,crop.h);for(let i=0;i<12;i++){const a=-Math.PI/2+i*Math.PI/6,x=crop.x+crop.w/2+crop.w*.445*Math.cos(a),y=crop.y+crop.h/2+crop.h*.445*Math.sin(a);ctx.beginPath();ctx.arc(x,y,Math.max(4,crop.w*.035),0,2*Math.PI);ctx.stroke();}}
+ function pointerPosition(e){const r=canvas.getBoundingClientRect();return {x:Math.max(0,Math.min(canvas.width,(e.clientX-r.left)*canvas.width/r.width)),y:Math.max(0,Math.min(canvas.height,(e.clientY-r.top)*canvas.height/r.height))};}
+ canvas.addEventListener('pointerdown',e=>{if(!source||recognizing)return;dragStart=pointerPosition(e);canvas.setPointerCapture(e.pointerId);});
+ canvas.addEventListener('pointermove',e=>{if(!dragStart)return;const p=pointerPosition(e);crop={x:Math.min(p.x,dragStart.x),y:Math.min(p.y,dragStart.y),w:Math.max(1,Math.abs(p.x-dragStart.x)),h:Math.max(1,Math.abs(p.y-dragStart.y))};drawImage();});
+ function finishDrag(){if(!dragStart)return;dragStart=null;$('reviewGrid').hidden=true;$('ocrMessage').textContent='框選已更新，請重新辨識。';}canvas.addEventListener('pointerup',finishDrag);canvas.addEventListener('pointercancel',finishDrag);
+ $('imageInput').addEventListener('change',async()=>{const file=$('imageInput').files[0];if(!file)return;try{if(!['image/png','image/jpeg','image/webp'].includes(file.type))throw Error('請選擇 PNG、JPG 或 WebP 圖片。');if(file.size>10*1024*1024)throw Error('圖片請小於 10 MB。');const url=URL.createObjectURL(file),img=new Image();try{img.src=url;await img.decode();}finally{URL.revokeObjectURL(url);}const scale=Math.min(1,1600/Math.max(img.width,img.height));canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);const raw=document.createElement('canvas');raw.width=canvas.width;raw.height=canvas.height;raw.getContext('2d').drawImage(img,0,0,raw.width,raw.height);source=raw;const size=Math.min(canvas.width*.82,canvas.height);crop={x:(canvas.width-size)/2,y:0,w:size,h:size};$('imageImport').hidden=false;$('reviewGrid').hidden=true;$('ocrMessage').textContent='拖曳調整框選，讓 12 個圓點對準數字，再按「辨識數字」。';drawImage();}catch(e){setMessage(e.message,true);}finally{$('imageInput').value='';}});
+ $('closeImage').addEventListener('click',()=>{$('imageImport').hidden=true;});
+ function loadTesseract(){if(window.Tesseract)return Promise.resolve(window.Tesseract);if(tesseractPromise)return tesseractPromise;tesseractPromise=new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js';s.onload=()=>resolve(window.Tesseract);s.onerror=()=>{tesseractPromise=null;s.remove();reject(Error('辨識元件無法載入，請手動修正順序或稍後再試。'));};document.head.append(s);});return tesseractPromise;}
+ async function fallbackOCR(patch){const T=await loadTesseract();if(!worker){worker=await T.createWorker('eng',1,{logger:m=>{if(m.status!=='recognizing text')$('ocrMessage').textContent='首次載入辨識元件…';}});await worker.setParameters({tessedit_char_whitelist:'0123456789',tessedit_pageseg_mode:'7'});}const enlarged=document.createElement('canvas');enlarged.width=enlarged.height=192;const c=enlarged.getContext('2d');c.drawImage(patch,0,0,192,192);const data=c.getImageData(0,0,192,192);let border=0;for(let x=0;x<192;x++)border+=data.data[x*4]+data.data[(191*192+x)*4];const invert=border/384<127;for(let p=0;p<data.data.length;p+=4){let g=(data.data[p]+data.data[p+1]+data.data[p+2])/3;if(invert)g=255-g;data.data[p]=data.data[p+1]=data.data[p+2]=g;}c.putImageData(data,0,0);const r=await worker.recognize(enlarged),text=r.data.text.trim();return /^([1-9]|1[0-2])$/.test(text)?{value:Number(text),score:r.data.confidence/100}:null;}
+ $('recognizeImage').addEventListener('click',async()=>{if(!source||recognizing)return;if(crop.w<100||crop.h<100){$('ocrMessage').textContent='框選太小，請包含全部 12 個數字。';return;}recognizing=true;$('recognizeImage').disabled=true;$('imageInput').disabled=true;$('ocrProgress').hidden=false;$('ocrProgress').value=0;const snapshot={...crop},image=source,results=[];let fallbackError="";try{for(let i=0;i<12;i++){const a=-Math.PI/2+i*Math.PI/6,cx=snapshot.x+snapshot.w/2+snapshot.w*.445*Math.cos(a),cy=snapshot.y+snapshot.h/2+snapshot.h*.445*Math.sin(a),size=Math.min(snapshot.w,snapshot.h)*.11,left=Math.round(cx-size/2),top=Math.round(cy-size/2),right=Math.round(cx+size/2),bottom=Math.round(cy+size/2);const patch=document.createElement('canvas');patch.width=right-left;patch.height=bottom-top;const c=patch.getContext('2d');c.drawImage(image,left,top,patch.width,patch.height,0,0,patch.width,patch.height);const rgba=c.getImageData(0,0,patch.width,patch.height).data;let candidate=NumeralRecognition.match(rgba,patch.width,patch.height);if(!fallbackError&&(candidate.score<.72||candidate.margin<.075)){try{const fallback=await fallbackOCR(patch);if(fallback&&fallback.score>.45&&candidate.score<.85)candidate=fallback;}catch(e){fallbackError=e.message;}}results.push({value:candidate.score>=.6?candidate.value:null,uncertain:candidate.score<.82||candidate.margin<.1});$('ocrProgress').value=i+1;$('ocrMessage').textContent='辨識 '+(i+1)+' / 12…';await new Promise(resolve=>setTimeout(resolve,0));}
+ const values=results.map(r=>r.value||'?');$('orderInput').value=values.join(' ');$('reviewGrid').innerHTML=results.map((r,i)=>'<label>位置 '+(i+1)+'<input aria-label="辨識位置 '+(i+1)+' 的編號" data-review="'+i+'" inputmode="numeric" maxlength="2" value="'+(r.value||'')+'" class="'+(r.uncertain?'uncertain':'')+'"></label>').join('');$('reviewGrid').hidden=false;const known=results.filter(r=>r.value).length;$('ocrMessage').textContent='讀到 '+known+' / 12 個數字。請檢查順序'+(results.some(r=>r.uncertain)?'，橙框為待確認項目':'')+'，再按「套用順序」。'+(fallbackError?' '+fallbackError:'');setMessage('辨識結果尚未套用，請先確認；重複或缺少編號會被攔截。');
+ }catch(e){$('ocrMessage').textContent='辨識未完成：'+e.message+'。可直接手動輸入順序。';}finally{recognizing=false;$('recognizeImage').disabled=false;$('imageInput').disabled=false;$('ocrProgress').hidden=true;}});
+ $('reviewGrid').addEventListener('input',()=>{$('orderInput').value=[...$('reviewGrid').querySelectorAll('input')].map(i=>i.value.trim()||'?').join(' ');});
+ $('orderInput').value=labels.join(' ');render(true);
 })();
 </script>
-</body>
-</html>
+</body></html>
